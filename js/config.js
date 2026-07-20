@@ -8,8 +8,8 @@
 // de datos, no esta clave.
 // =========================================================
 
-export const SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
-export const SUPABASE_ANON_KEY = "TU-ANON-KEY-PUBLICA";
+export const SUPABASE_URL = "https://cthixgioeepbmyuqopgz.supabase.co";
+export const SUPABASE_ANON_KEY = "sb_publishable_h2P17KTJ-o-964FHMCz7zw_xzPZO8WR";
 
 export const APP_NAME = "Mi Bebé Crece";
 export const DEFAULT_COUNTRY = "CO";
