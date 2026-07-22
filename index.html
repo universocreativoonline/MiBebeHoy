@@ -7,15 +7,315 @@
   <meta name="description" content="Registro diario y acompañamiento del primer año de tu bebé.">
   <meta name="theme-color" content="#FFF6EF">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" href="img/icon-192.png">
-  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <link rel="icon" type="image/png" href="bebe.png.png">
+  <link rel="apple-touch-icon" href="bebe.png.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Mi Bebé Hoy">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+/* ============================================================
+   Mi Bebé Hoy
+   Paleta derivada del logo: crema, rosa pastel, celeste,
+   amarillo macetita, verde brote, tinta café suave.
+   ============================================================ */
+:root {
+  --crema: #FFF6EF;
+  --blanco: #FFFFFF;
+  --rosa: #F9D3DE;
+  --rosa-fuerte: #EE8FA4;
+  --celeste: #C6E6F5;
+  --celeste-fuerte: #7FBEDC;
+  --amarillo: #FBE9B8;
+  --amarillo-fuerte: #E9C46A;
+  --verde: #D4EDC4;
+  --verde-fuerte: #8CC63F;
+  --tinta: #5B4A42;
+  --tinta-suave: #8A776D;
+  --sombra: 0 6px 18px rgba(91, 74, 66, 0.10);
+  --radio: 22px;
+  --nav-h: 62px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Nunito', -apple-system, system-ui, sans-serif;
+  background: var(--crema);
+  color: var(--tinta);
+  line-height: 1.5;
+}
+
+h1, h2, .lock-title, .teaser-title { font-family: 'Quicksand', 'Nunito', sans-serif; }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select {
+  font-family: inherit; font-size: 1rem; color: var(--tinta);
+}
+
+/* ================= PANTALLA DE BLOQUEO / ONBOARDING ================= */
+.lockscreen {
+  min-height: 100dvh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 15% 20%, rgba(198, 230, 245, .55), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(251, 233, 184, .55), transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(249, 211, 222, .65), transparent 55%),
+    var(--crema);
+}
+.lock-inner { width: 100%; max-width: 360px; text-align: center; }
+.lock-logo-wrap { position: relative; display: inline-block; margin-bottom: 8px; }
+.lock-logo {
+  width: 180px; height: 180px; border-radius: 44px;
+  box-shadow: var(--sombra);
+  animation: float 4s ease-in-out infinite;
+}
+.lock-logo-sm { width: 110px; height: 110px; border-radius: 28px; margin-bottom: 10px; }
+@keyframes float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
+@media (prefers-reduced-motion: reduce) {
+  .lock-logo, .sparkle { animation: none !important; }
+}
+.sparkle {
+  position: absolute; color: var(--amarillo-fuerte); font-size: 1rem;
+  animation: twinkle 2.6s ease-in-out infinite; opacity: .8;
+}
+.s1 { top: -6px; right: -14px; }
+.s2 { bottom: 10px; left: -18px; animation-delay: .8s; color: var(--celeste-fuerte); }
+.s3 { top: 40%; right: -26px; animation-delay: 1.6s; color: var(--rosa-fuerte); }
+@keyframes twinkle { 0%,100% { opacity:.25; transform: scale(.8);} 50% { opacity:1; transform: scale(1.15);} }
+
+.lock-title { font-size: 1.9rem; font-weight: 700; margin: 8px 0 4px; }
+.lock-sub { color: var(--tinta-suave); margin-bottom: 24px; }
+.lock-hint { font-size: .85rem; color: var(--tinta-suave); margin: 8px 0 4px; }
+.lock-error { color: #C0564F; font-size: .9rem; margin: 8px 0; font-weight: 600; }
+
+/* ================= BOTONES / INPUTS ================= */
+.btn {
+  display: block; width: 100%; padding: 14px 18px; border-radius: 999px;
+  font-size: 1.05rem; font-weight: 700; transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:active { transform: scale(.97); }
+.btn:focus-visible, .nav-btn:focus-visible, .type-btn:focus-visible, .filter-chip:focus-visible, .chip-link:focus-visible {
+  outline: 3px solid var(--celeste-fuerte); outline-offset: 2px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--rosa-fuerte), #F5A8BB);
+  color: #fff; box-shadow: 0 8px 20px rgba(238, 143, 164, .40);
+}
+.btn-big { padding: 16px; font-size: 1.12rem; }
+.btn-ghost { color: var(--tinta-suave); margin-top: 10px; font-weight: 600; }
+.btn-soft { background: var(--celeste); color: var(--tinta); margin-top: 12px; box-shadow: var(--sombra); }
+.btn-danger-soft { background: #F6DDDA; color: #A34A43; margin-top: 12px; }
+.btn + .btn { margin-top: 10px; }
+
+.input {
+  width: 100%; padding: 13px 16px; border-radius: 16px;
+  border: 2px solid var(--rosa); background: var(--blanco);
+  margin: 6px 0 14px; outline: none;
+}
+.input:focus { border-color: var(--rosa-fuerte); }
+.input-center { text-align: center; }
+.field-label { display: block; font-weight: 700; font-size: .92rem; text-align: left; }
+.lock-inner .field-label { text-align: center; margin-top: 6px; }
+
+/* ================= ESTRUCTURA APP ================= */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
+  background: rgba(255, 246, 239, .92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(91,74,66,.07);
+}
+.topbar-logo { width: 42px; height: 42px; border-radius: 12px; }
+.topbar-text { display: flex; flex-direction: column; }
+.topbar-name { font-weight: 800; font-size: 1.05rem; }
+.topbar-age { font-size: .82rem; color: var(--tinta-suave); }
+
+#main {
+  max-width: 520px; margin: 0 auto;
+  padding: 18px 18px calc(var(--nav-h) + 24px + env(safe-area-inset-bottom));
+}
+
+.section-title { font-size: 1.15rem; font-weight: 700; margin: 20px 0 10px; }
+.section-sub { color: var(--tinta-suave); font-size: .92rem; margin-bottom: 12px; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+
+.card {
+  background: var(--blanco); border-radius: var(--radio);
+  padding: 18px; box-shadow: var(--sombra); margin-bottom: 14px;
+}
+
+/* ---- Hero inicio ---- */
+.card-hero {
+  background: linear-gradient(135deg, var(--celeste) 0%, var(--rosa) 100%);
+  box-shadow: 0 10px 24px rgba(127, 190, 220, .25);
+}
+.hero-greet { font-weight: 700; font-size: 1.05rem; }
+.hero-age { font-family: 'Quicksand', sans-serif; font-size: 1.45rem; font-weight: 700; margin: 2px 0 8px; }
+.chip-link {
+  display: inline-block; font-weight: 700; font-size: .9rem;
+  color: var(--tinta); background: rgba(255,255,255,.55);
+  padding: 7px 14px; border-radius: 999px; margin-top: 4px;
+}
+.view > .chip-link { background: var(--amarillo); box-shadow: var(--sombra); }
+
+/* ---- Resúmenes ---- */
+.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.sum-card {
+  background: var(--blanco); border-radius: 18px; padding: 12px 6px;
+  text-align: center; box-shadow: var(--sombra);
+}
+.sum-card .n { font-size: 1.3rem; font-weight: 800; display: block; }
+.sum-card .l { font-size: .72rem; color: var(--tinta-suave); font-weight: 700; }
+.sum-card .e { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+
+/* ---- Teaser guía ---- */
+.card-guide-teaser { background: var(--verde); box-shadow: 0 8px 20px rgba(140,198,63,.20); margin-top: 16px; }
+.teaser-eyebrow { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #5E8A3A; }
+.teaser-title { font-size: 1.15rem; font-weight: 700; margin: 4px 0 4px; }
+
+/* ---- Registros ---- */
+.records-list { display: flex; flex-direction: column; gap: 10px; }
+.rec {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--blanco); border-radius: 18px; padding: 13px 14px; box-shadow: var(--sombra);
+}
+.rec-ico {
+  width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+}
+.rec-ico.alimentacion { background: var(--amarillo); }
+.rec-ico.sueno { background: var(--celeste); }
+.rec-ico.panal { background: var(--verde); }
+.rec-ico.nota { background: var(--rosa); }
+.rec-body { flex: 1; min-width: 0; }
+.rec-title { font-weight: 800; font-size: .95rem; }
+.rec-detail { font-size: .88rem; color: var(--tinta-suave); overflow-wrap: anywhere; }
+.rec-time { font-size: .78rem; color: var(--tinta-suave); font-weight: 700; white-space: nowrap; }
+.rec-actions { display: flex; gap: 6px; margin-top: 6px; }
+.rec-actions button {
+  font-size: .78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
+}
+.rec-edit { background: var(--celeste); }
+.rec-del { background: #F6DDDA; color: #A34A43; }
+.day-sep { font-size: .82rem; font-weight: 800; color: var(--tinta-suave); margin: 12px 0 2px; text-transform: capitalize; }
+.empty {
+  text-align: center; color: var(--tinta-suave); background: var(--blanco);
+  border-radius: 18px; padding: 22px 16px; box-shadow: var(--sombra); font-size: .92rem;
+}
+
+/* ---- Registro: selector de tipo ---- */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.type-btn {
+  border-radius: 20px; padding: 16px 10px; font-weight: 800; font-size: .95rem;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  box-shadow: var(--sombra); transition: transform .12s ease;
+  border: 3px solid transparent;
+}
+.type-btn:active { transform: scale(.96); }
+.type-btn.selected { border-color: var(--tinta); }
+.type-emoji { font-size: 1.5rem; }
+.t-ali { background: var(--amarillo); }
+.t-sue { background: var(--celeste); }
+.t-pan { background: var(--verde); }
+.t-not { background: var(--rosa); }
+
+.seg-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 14px; }
+.seg {
+  padding: 8px 14px; border-radius: 999px; background: var(--crema);
+  font-weight: 700; font-size: .88rem; border: 2px solid transparent;
+}
+.seg.selected { background: var(--rosa); border-color: var(--rosa-fuerte); }
+textarea.input { resize: vertical; min-height: 70px; }
+.ok-msg { color: #5E8A3A; font-weight: 700; margin-top: 8px; font-size: .9rem; }
+
+/* ---- Filtros historial ---- */
+.filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 8px; }
+.filter-chip {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 999px; background: var(--blanco);
+  font-weight: 700; font-size: .85rem; box-shadow: var(--sombra);
+}
+.filter-chip.active { background: var(--tinta); color: #fff; }
+
+/* ---- Guía diaria ---- */
+.card-activity { padding: 20px; }
+.act-month { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--rosa-fuerte); }
+.act-title { font-family: 'Quicksand', sans-serif; font-size: 1.3rem; font-weight: 700; margin: 4px 0 14px; }
+.act-step { margin-bottom: 14px; }
+.act-step-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-weight: 800; font-size: .85rem; margin-bottom: 3px;
+}
+.act-step-label .dot {
+  width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
+  align-items: center; justify-content: center; font-size: .72rem; color: var(--tinta);
+}
+.act-step:nth-of-type(1) .dot { background: var(--amarillo); }
+.act-step:nth-of-type(2) .dot { background: var(--celeste); }
+.act-step:nth-of-type(3) .dot { background: var(--verde); }
+.act-step:nth-of-type(4) .dot { background: var(--rosa); }
+.act-step:nth-of-type(5) .dot { background: var(--amarillo); }
+.act-step p { font-size: .93rem; color: var(--tinta-suave); }
+
+/* ---- El primer año: caminito de brotes ---- */
+.year-path { position: relative; padding-left: 34px; }
+.year-path::before {
+  content: ""; position: absolute; left: 15px; top: 14px; bottom: 14px;
+  width: 4px; border-radius: 4px;
+  background: linear-gradient(180deg, var(--verde-fuerte), var(--verde));
+}
+.ym {
+  position: relative; background: var(--blanco); border-radius: 18px;
+  padding: 13px 15px; margin-bottom: 12px; box-shadow: var(--sombra);
+}
+.ym::before {
+  content: "🌱"; position: absolute; left: -34px; top: 12px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--verde); display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+}
+.ym.past { opacity: .78; }
+.ym.past::before { content: "✓"; background: var(--verde-fuerte); color: #fff; font-weight: 800; }
+.ym.future { opacity: .55; }
+.ym.future::before { content: ""; background: var(--crema); border: 3px solid var(--verde); }
+.ym.current {
+  border: 3px solid var(--verde-fuerte);
+  box-shadow: 0 10px 24px rgba(140,198,63,.28);
+}
+.ym.current::before { content: "🌸"; background: var(--rosa); }
+.ym-title { font-weight: 800; font-size: .98rem; }
+.ym-now { font-size: .72rem; font-weight: 800; background: var(--verde); color: #45702A; padding: 3px 10px; border-radius: 999px; margin-left: 6px; }
+.ym-desc { font-size: .86rem; color: var(--tinta-suave); margin-top: 2px; }
+
+/* ---- Ajustes ---- */
+.small-text { font-size: .88rem; color: var(--tinta-suave); margin: 6px 0 4px; }
+.disclaimer {
+  font-size: .8rem; color: var(--tinta-suave); text-align: center;
+  padding: 10px 14px 0; line-height: 1.45;
+}
+
+/* ================= NAV INFERIOR (safe-area iPhone) ================= */
+.bottomnav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex; justify-content: space-around;
+  background: rgba(255,255,255,.95); backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(91,74,66,.08);
+  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: .68rem; font-weight: 700; color: var(--tinta-suave);
+  padding: 4px 8px; border-radius: 14px; min-width: 58px;
+}
+.nav-ico { font-size: 1.25rem; }
+.nav-btn.active { color: var(--tinta); background: var(--rosa); }
+
+  </style>
 </head>
 <body>
 
@@ -23,7 +323,7 @@
   <section id="screen-lock" class="lockscreen" hidden>
     <div class="lock-inner">
       <div class="lock-logo-wrap">
-        <img src="img/logo-bebe.png" alt="Bebé sonriendo en una macetita" class="lock-logo" id="lockLogo">
+        <img src="bebe.png.png" alt="Bebé sonriendo en una macetita" class="lock-logo" id="lockLogo">
         <span class="sparkle s1">✦</span>
         <span class="sparkle s2">✦</span>
         <span class="sparkle s3">✦</span>
@@ -49,7 +349,7 @@
   <!-- ============ ONBOARDING: DATOS DEL BEBÉ ============ -->
   <section id="screen-onboarding" class="lockscreen" hidden>
     <div class="lock-inner">
-      <img src="img/logo-bebe.png" alt="" class="lock-logo lock-logo-sm">
+      <img src="bebe.png.png" alt="" class="lock-logo lock-logo-sm">
       <h2 class="lock-title">¡Bienvenida! 🌱</h2>
       <p class="lock-sub">Cuéntanos de tu bebé para acompañarlos cada día.</p>
       <label class="field-label" for="obName">Nombre de tu bebé</label>
@@ -64,7 +364,7 @@
   <!-- ============ APP PRINCIPAL ============ -->
   <div id="app" hidden>
     <header class="topbar">
-      <img src="img/logo-bebe.png" alt="" class="topbar-logo">
+      <img src="bebe.png.png" alt="" class="topbar-logo">
       <div class="topbar-text">
         <span class="topbar-name" id="tbName">Mi bebé</span>
         <span class="topbar-age" id="tbAge"></span>
@@ -171,6 +471,545 @@
     </nav>
   </div>
 
-  <script src="js/app.js"></script>
+  <script>
+/* ============================================================
+   Mi Bebé Hoy — Lógica principal (LocalStorage)
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var CLAVE_ACCESO = "MiBebeDuerme2026";
+  var LS = {
+    unlocked: "bc_unlocked",
+    baby: "bc_baby",
+    records: "bc_records"
+  };
+
+  /* ---------- Utilidades ---------- */
+  function $(id) { return document.getElementById(id); }
+  function read(key, fallback) {
+    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
+  }
+  function write(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function toLocalInputValue(d) {
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+  function fmtTime(iso) {
+    var d = new Date(iso);
+    return pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+  function fmtDay(iso) {
+    var d = new Date(iso);
+    return d.toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" });
+  }
+  function sameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+  function esc(s) {
+    return String(s || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* Edad en meses y semanas: "3 meses, 2 semanas" */
+  function babyAge(birthISO, ref) {
+    var birth = new Date(birthISO + "T00:00:00");
+    var now = ref || new Date();
+    if (now < birth) return { months: 0, weeks: 0, text: "por nacer" };
+
+    var months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
+    var anchor = new Date(birth);
+    anchor.setMonth(anchor.getMonth() + months);
+    if (anchor > now) { months--; anchor.setMonth(anchor.getMonth() - 1); }
+    var weeks = Math.floor((now - anchor) / (7 * 24 * 3600 * 1000));
+
+    var text;
+    if (months === 0 && weeks === 0) text = "recién nacido";
+    else if (months === 0) text = weeks + (weeks === 1 ? " semana" : " semanas");
+    else {
+      text = months + (months === 1 ? " mes" : " meses");
+      if (weeks > 0) text += ", " + weeks + (weeks === 1 ? " semana" : " semanas");
+    }
+    return { months: months, weeks: weeks, text: text };
+  }
+
+  /* ---------- Contenido: 12 meses ---------- */
+  var MESES_INFO = [
+    { t: "Mes 1 · Conociéndose", d: "Tu bebé reconoce tu voz y tu olor. Todo gira alrededor del contacto y la calma." },
+    { t: "Mes 2 · Primeras sonrisas", d: "Aparecen las sonrisas sociales y sigue objetos con la mirada." },
+    { t: "Mes 3 · Descubre sus manos", d: "Sostiene mejor la cabeza y empieza a jugar con sus manitas." },
+    { t: "Mes 4 · Risas y giros", d: "Ríe a carcajadas y puede empezar a girar sobre sí mismo." },
+    { t: "Mes 5 · Todo a la boca", d: "Explora el mundo con la boca y alcanza objetos con intención." },
+    { t: "Mes 6 · Sentadito", d: "Muchos bebés empiezan a sentarse con apoyo y a probar alimentos." },
+    { t: "Mes 7 · Pequeño explorador", d: "Se desplaza rodando o arrastrándose y balbucea sílabas." },
+    { t: "Mes 8 · Gateo en camino", d: "Gana movilidad y puede extrañar cuando no te ve (¡es normal!)." },
+    { t: "Mes 9 · Se pone de pie", d: "Se apoya para pararse y entiende palabras cotidianas." },
+    { t: "Mes 10 · Primeros pasos con apoyo", d: "Camina sosteniéndose de los muebles y aplaude o dice adiós." },
+    { t: "Mes 11 · Casi caminando", d: "Se sostiene solo por momentos y señala lo que quiere." },
+    { t: "Mes 12 · ¡Feliz primer año!", d: "Puede dar sus primeros pasos y decir sus primeras palabras." }
+  ];
+
+  /* Actividades diarias: por mes (0-11), cada una con la estructura de 5 puntos.
+     que = qué vas a hacer · como = cómo hacerlo · dur = duración
+     ben = beneficios · obs = qué observar después */
+  var ACTIVIDADES = [
+    [ // Mes 1
+      { titulo: "Tiempo piel con piel", que: "Un momento de contacto piel con piel con tu bebé.", como: "Recuéstate cómoda, coloca a tu bebé (solo con pañal) sobre tu pecho y cúbrelo con una mantita. Respira lento y háblale bajito.", dur: "15 a 20 minutos.", ben: "Regula su temperatura y ritmo cardíaco, favorece el vínculo y lo calma profundamente.", obs: "Observa si se relaja, se queda dormido o busca alimentarse. Son señales de que se siente seguro contigo." },
+      { titulo: "Conversación de miradas", que: "Un ratito de miradas y voz suave cara a cara.", como: "Sostén a tu bebé a unos 25–30 cm de tu rostro, sonríe y háblale despacio con frases cortas y cariñosas.", dur: "5 a 10 minutos, cuando esté tranquilo y despierto.", ben: "Estimula su visión, su oído y las primeras bases del lenguaje y del apego.", obs: "Fíjate si sostiene tu mirada unos segundos o se calma al escucharte. Si gira la cara, es su forma de decir 'necesito una pausa'." },
+      { titulo: "Masaje de buenas noches", que: "Un masaje suave antes de dormir.", como: "Con el bebé sobre una superficie cómoda y tibia, acaricia con movimientos lentos sus piernas, bracitos y espalda, usando una gota de aceite para bebés si quieres.", dur: "10 minutos.", ben: "Ayuda a la digestión, relaja su cuerpito y crea una rutina que anuncia la hora de dormir.", obs: "Nota qué zonas parecen gustarle más y si después se duerme con mayor facilidad." }
+    ],
+    [ // Mes 2
+      { titulo: "Cazadora de sonrisas", que: "Provocar y celebrar sus primeras sonrisas sociales.", como: "Ponte frente a tu bebé, sonríele exagerado, hazle sonidos suaves y espera unos segundos su respuesta antes de repetir.", dur: "5 a 10 minutos.", ben: "Fortalece el vínculo y le enseña que la comunicación es de ida y vuelta.", obs: "Cuenta cuántas veces te devuelve la sonrisa y si empieza a sonreír apenas te ve." },
+      { titulo: "Sigue la sonaja", que: "Un juego para que siga objetos con la mirada.", como: "Mueve lentamente una sonaja o juguete de colores de un lado a otro, a unos 30 cm de su carita, dejando que la siga con los ojos.", dur: "5 minutos, un par de veces al día.", ben: "Desarrolla el seguimiento visual y la coordinación de sus ojitos.", obs: "Observa hasta dónde logra seguir el objeto y si intenta girar la cabeza para no perderlo." },
+      { titulo: "Panza abajo con compañía", que: "Tiempo boca abajo (tummy time) contigo al frente.", como: "Coloca a tu bebé boca abajo sobre una manta firme, acuéstate frente a él y llámalo por su nombre con voz alegre.", dur: "3 a 5 minutos, 2 o 3 veces al día, siempre despierto y supervisado.", ben: "Fortalece cuello, hombros y espalda, preparándolo para girar y gatear.", obs: "Fíjate cuánto logra levantar la cabecita y si cada día aguanta un poquito más." }
+    ],
+    [ // Mes 3
+      { titulo: "Descubriendo sus manitas", que: "Ayudarlo a descubrir y mirar sus propias manos.", como: "Acuéstalo boca arriba, junta suavemente sus manitas frente a su cara y deja que las observe. Puedes ponerle un calcetín de color vivo en una mano.", dur: "5 a 10 minutos.", ben: "Impulsa la coordinación ojo-mano y la conciencia de su propio cuerpo.", obs: "Mira si se lleva las manos a la boca o las junta solito durante el día." },
+      { titulo: "Cuentos con voz de mamá", que: "Leerle un cuento corto en voz alta.", como: "Elige un libro de imágenes grandes y contrastes, siéntalo apoyado en ti y señala los dibujos mientras lees con distintas entonaciones.", dur: "10 minutos.", ben: "Alimenta su lenguaje, su atención y el amor por los momentos compartidos.", obs: "Observa si mira las páginas, mueve brazos emocionado o vocaliza como 'respondiendo'." },
+      { titulo: "Alcanza el juguete", que: "Motivar que estire los brazos hacia un objeto.", como: "Durante el tiempo boca abajo o acostado, coloca un juguete llamativo apenas fuera de su alcance y anímalo a tocarlo.", dur: "5 a 8 minutos.", ben: "Desarrolla el alcance intencional y fortalece brazos y tronco.", obs: "Nota si abre la mano al acercarse al juguete y si logra rozarlo o tomarlo." }
+    ],
+    [ // Mes 4
+      { titulo: "Fábrica de carcajadas", que: "Jugar a provocar sus primeras risas.", como: "Haz sonidos chistosos, soplidos suaves en su pancita o el clásico '¿dónde está? ¡aquí está!' con tus manos.", dur: "5 a 10 minutos.", ben: "Las risas liberan tensión, fortalecen el vínculo y estimulan su comunicación.", obs: "Descubre qué juego le da más risa; se convertirá en su favorito por semanas." },
+      { titulo: "Practicando el giro", que: "Acompañarlo a practicar el giro de boca arriba a boca abajo.", como: "Acuéstalo boca arriba, muéstrale un juguete a un costado y ayúdalo guiando suavemente su cadera para completar el giro.", dur: "5 minutos por sesión.", ben: "Fortalece el tronco y le da su primera gran conquista de movimiento.", obs: "Observa hacia qué lado gira más fácil y celebra cada intento aunque no lo complete." },
+      { titulo: "Texturas amigas", que: "Explorar telas y texturas diferentes con sus manos.", como: "Ofrécele una por una telas seguras: algodón suave, toalla, seda. Pasa cada una por sus manitas y bracitos nombrándolas.", dur: "8 a 10 minutos.", ben: "Estimula el tacto y la curiosidad por explorar el mundo.", obs: "Fíjate cuál textura sostiene por más tiempo o cuál le hace abrir los ojos con sorpresa." }
+    ],
+    [ // Mes 5
+      { titulo: "Todo pasa por la boca", que: "Ofrecer juguetes seguros para explorar con la boca.", como: "Dale mordedores limpios y de tamaño seguro, uno a la vez, y deja que los examine libremente bajo tu mirada.", dur: "10 minutos.", ben: "La boca es su gran laboratorio: así conoce formas, texturas y calma sus encías.", obs: "Nota si babea más o muerde con ganas: puede anunciar la llegada de dientitos." },
+      { titulo: "El juego del espejo", que: "Mirarse juntos frente a un espejo.", como: "Siéntate con tu bebé frente a un espejo seguro, saluda a 'ese bebé', haz caras y nombra lo que ven: ojos, nariz, boca.", dur: "5 a 10 minutos.", ben: "Favorece el reconocimiento de sí mismo y las habilidades sociales.", obs: "Observa si sonríe al reflejo, lo toca o busca tu mirada real comparando." },
+      { titulo: "Alcance sentado con apoyo", que: "Practicar el alcance de objetos apoyado entre cojines.", como: "Siéntalo bien rodeado de cojines firmes y coloca juguetes cerca para que los tome, cambiándolos de lugar.", dur: "8 a 10 minutos, siempre a tu lado.", ben: "Prepara los músculos para sentarse solo y afina la puntería de sus manos.", obs: "Fíjate si mantiene el equilibrio unos segundos y si pasa objetos de una mano a otra." }
+    ],
+    [ // Mes 6
+      { titulo: "Sentaditos jugando", que: "Practicar estar sentado con apoyo ligero.", como: "Siéntalo en el piso contigo detrás como respaldo y pon juguetes al frente. Reduce tu apoyo poco a poco según responda.", dur: "10 minutos.", ben: "Fortalece espalda y abdomen y le da una nueva vista del mundo.", obs: "Observa cuánto aguanta erguido y si usa las manos para sostenerse (¡buena señal!)." },
+      { titulo: "Fiesta de sabores", que: "Acompañar la exploración de un alimento nuevo (si ya inició la alimentación complementaria con su pediatra).", como: "Ofrécele el alimento indicado en su plan, en textura adecuada, sin prisa, dejándolo tocar, oler y probar a su ritmo.", dur: "El tiempo de una comida tranquila, unos 15 minutos.", ben: "Construye una relación positiva y curiosa con la comida.", obs: "Nota gestos, preferencias y cuánto realmente llegó a su boquita (¡el desorden es parte del aprendizaje!)." },
+      { titulo: "¿Dónde cayó?", que: "Jugar a dejar caer y buscar objetos.", como: "Deja caer un juguete suave frente a él diciendo '¡oh! ¿dónde está?' y ayúdalo a encontrarlo con la mirada.", dur: "5 a 8 minutos.", ben: "Introduce la noción de que las cosas existen aunque no se vean.", obs: "Observa si sigue el objeto con la mirada hasta el piso o si lo busca él mismo." }
+    ],
+    [ // Mes 7
+      { titulo: "Circuito de cojines", que: "Crear un mini recorrido seguro para que se desplace.", como: "En el piso, arma un caminito con cojines bajos y coloca su juguete favorito al final para motivarlo a llegar rodando o arrastrándose.", dur: "10 a 15 minutos.", ben: "Impulsa la movilidad, la fuerza y la perseverancia.", obs: "Fíjate qué estrategia usa para avanzar: rodar, reptar o girar. Todas valen." },
+      { titulo: "Charla de sílabas", que: "Conversar imitando sus balbuceos.", como: "Cuando diga 'ba-ba' o 'ma-ma', respóndele repitiendo sus sonidos y agregando palabras reales: '¿ma-ma? ¡Sí, aquí está mamá!'.", dur: "A lo largo del día, en ratitos de 3 a 5 minutos.", ben: "Le enseña los turnos de la conversación y expande su repertorio de sonidos.", obs: "Anota qué sílabas repite más; pronto se convertirán en sus primeras palabras." },
+      { titulo: "Tambores caseros", que: "Hacer música golpeando recipientes seguros.", como: "Dale una cuchara de silicona y recipientes plásticos volteados. Muéstrale cómo golpear y deja que experimente ritmos.", dur: "8 a 10 minutos.", ben: "Desarrolla causa-efecto, coordinación y sentido del ritmo.", obs: "Observa si alterna manos, cambia la fuerza del golpe o busca tu reacción al hacer ruido." }
+    ],
+    [ // Mes 8
+      { titulo: "Persigue el juguete rodante", que: "Motivar el gateo con un juguete que ruede.", como: "Haz rodar lentamente una pelota suave frente a él y anímalo con tu voz a ir por ella.", dur: "10 a 15 minutos.", ben: "El gateo fortalece todo su cuerpo y conecta los dos lados del cerebro.", obs: "Nota si se impulsa con brazos, si logra ponerse en cuatro puntos o si ya avanza." },
+      { titulo: "Aquí estoy, mi amor", que: "Practicar separaciones cortitas y reencuentros felices.", como: "Dile 'ya vuelvo', sal de su vista unos segundos y regresa celebrando: '¡aquí está mamá!'. Aumenta el tiempo muy de a poco.", dur: "Ratitos de 1 a 2 minutos, varias veces.", ben: "Le enseña que aunque no te vea, siempre regresas. Suaviza la angustia de separación.", obs: "Observa cómo reacciona al reencuentro y si cada vez tolera mejor la breve espera." },
+      { titulo: "Caja de tesoros", que: "Explorar una caja con objetos cotidianos seguros.", como: "Llena una caja con objetos seguros y variados (cuchara de madera, tela, tapa grande) y deja que los saque y examine uno a uno.", dur: "10 a 15 minutos supervisados.", ben: "Alimenta la curiosidad, la motricidad fina y la concentración.", obs: "Fíjate cuál objeto explora más tiempo y cómo lo gira, golpea o muerde para conocerlo." }
+    ],
+    [ // Mes 9
+      { titulo: "De pie con apoyo", que: "Practicar ponerse de pie sosteniéndose de muebles firmes.", como: "Coloca un juguete sobre el sillón o una mesa baja estable y anímalo a incorporarse para alcanzarlo, cuidándolo de cerca.", dur: "10 minutos.", ben: "Fortalece piernas y equilibrio, el paso previo a caminar.", obs: "Observa si se para solo, cuánto aguanta y cómo resuelve volver a sentarse." },
+      { titulo: "Órdenes con premio", que: "Jugar con palabras que ya entiende: 'dame', 'toma', 'adiós'.", como: "Pídele el juguete con la mano extendida ('¿me lo das?'), agradece con fiesta y devuélveselo ('toma').", dur: "5 a 10 minutos.", ben: "Confirma su comprensión del lenguaje y el placer de cooperar.", obs: "Anota qué palabras entiende claramente aunque todavía no las diga." },
+      { titulo: "Pinza fina con meriendas", que: "Practicar la pinza (pulgar e índice) con trocitos de comida segura.", como: "Sobre su bandeja limpia, coloca trocitos blandos y seguros de su dieta habitual y deja que los tome solito.", dur: "Durante una merienda tranquila.", ben: "La pinza fina es clave para comer solo, dibujar y vestirse en el futuro.", obs: "Mira si ya usa pulgar e índice o todavía barre con toda la manita." }
+    ],
+    [ // Mes 10
+      { titulo: "Crucero por los muebles", que: "Acompañar sus pasos laterales sosteniéndose de los muebles.", como: "Acomoda muebles estables en línea y coloca juguetes a lo largo del recorrido para que 'viaje' de uno a otro.", dur: "10 a 15 minutos.", ben: "Afina equilibrio y coordinación, acercándolo a los primeros pasos.", obs: "Fíjate si cruza tramos cada vez más largos o suelta una mano por momentos." },
+      { titulo: "Aplausos y adiós", que: "Jugar con gestos sociales: aplaudir, tirar besos, decir adiós.", como: "Modela cada gesto con música o al despedirse de alguien, y celebra en grande cada imitación.", dur: "Momentos cortos durante el día.", ben: "Los gestos son sus primeras 'palabras' y encantan a todos a su alrededor.", obs: "Anota qué gestos ya hace solo y en qué situaciones los usa espontáneamente." },
+      { titulo: "Meter y sacar", que: "Jugar a meter y sacar objetos de un recipiente.", como: "Dale un balde o caja y bloques grandes. Muéstrale cómo meterlos uno a uno y volcarlos, y deja que repita a su modo.", dur: "10 minutos.", ben: "Trabaja motricidad fina, concentración y nociones de dentro/fuera.", obs: "Observa si logra soltar el objeto a propósito dentro del recipiente: ¡es más difícil de lo que parece!" }
+    ],
+    [ // Mes 11
+      { titulo: "Pasitos con tus manos", que: "Caminar tomado de tus manos.", como: "Colócate detrás, dale tus dedos como apoyo y camina despacito a su ritmo hacia un juguete o hacia papá.", dur: "10 minutos, con descansos.", ben: "Le da confianza y práctica para animarse a soltar y caminar solo.", obs: "Nota si empieza a soltarse de una mano o si se frena a mantener el equilibrio solito." },
+      { titulo: "Señalar el mundo", que: "Nombrar todo lo que señala con su dedito.", como: "Cuando señale algo, nómbralo con entusiasmo: '¡El perro! Guau guau'. Agrega un dato: 'El perro toma agua'.", dur: "Durante paseos y ratos en casa.", ben: "Señalar es un hito enorme de comunicación; nombrar multiplica su vocabulario.", obs: "Anota qué cosas señala más: son sus intereses y sus futuras primeras palabras." },
+      { titulo: "Torre de dos bloques", que: "Construir torres pequeñas y (claro) derrumbarlas.", como: "Apila dos bloques grandes, celebra la torre y deja que la tire. Luego invítalo a poner él un bloque encima de otro.", dur: "8 a 10 minutos.", ben: "Coordina ojo-mano, enseña precisión y causa-efecto entre risas.", obs: "Observa si intenta apilar aunque no lo logre; el intento es el verdadero avance." }
+    ],
+    [ // Mes 12
+      { titulo: "Primeros pasos libres", que: "Invitar a caminar solito entre tus brazos y los de alguien más.", como: "Siéntense a un metro de distancia, extiendan los brazos y llámenlo por turnos para que cruce caminando.", dur: "10 a 15 minutos con pausas.", ben: "Cada cruce fortalece piernas, equilibrio y una confianza gigante.", obs: "Cuenta sus pasos seguidos y observa cómo mejora día a día. Si aún no camina, también es normal: cada bebé tiene su ritmo." },
+      { titulo: "Álbum del primer año", que: "Mirar juntos fotos de su primer año.", como: "Pasen fotos en el teléfono o álbum nombrando personas y momentos: 'Ahí eras chiquitito', '¡Mira, la abuela!'.", dur: "10 minutos.", ben: "Refuerza memoria, lenguaje y el sentido de pertenencia a su familia.", obs: "Observa si reconoce personas, sonríe ante ciertas fotos o intenta nombrar a alguien." },
+      { titulo: "Pedidos con palabras", que: "Animar sus primeras palabras con elecciones simples.", como: "Muéstrale dos opciones ('¿agua o banana?') y espera unos segundos su respuesta con sonido, gesto o palabra antes de dársela.", dur: "En momentos naturales del día.", ben: "Le muestra que sus palabras y gestos tienen poder para comunicar lo que quiere.", obs: "Anota cada palabra o intento nuevo: estás presenciando el nacimiento de su lenguaje." }
+    ]
+  ];
+
+  /* ---------- Estado ---------- */
+  var state = {
+    baby: read(LS.baby, null),
+    records: read(LS.records, []),
+    filter: "todos",
+    formType: null,
+    editingId: null
+  };
+
+  /* ---------- Arranque ---------- */
+  function boot() {
+    if (!read(LS.unlocked, false)) {
+      showOnly("screen-lock");
+    } else if (!state.baby) {
+      showOnly("screen-onboarding");
+    } else {
+      showApp();
+    }
+  }
+
+  function showOnly(id) {
+    $("screen-lock").hidden = id !== "screen-lock";
+    $("screen-onboarding").hidden = id !== "screen-onboarding";
+    $("app").hidden = id !== "app";
+  }
+
+  function showApp() {
+    showOnly("app");
+    renderAll();
+  }
+
+  /* ---------- Pantalla de acceso ---------- */
+  $("btnComenzar").addEventListener("click", function () {
+    $("lockStep1").hidden = true;
+    $("lockStep2").hidden = false;
+    $("passInput").focus();
+  });
+  $("btnVolverLock").addEventListener("click", function () {
+    $("lockStep2").hidden = true;
+    $("lockStep1").hidden = false;
+    $("lockError").hidden = true;
+    $("passInput").value = "";
+  });
+  function tryUnlock() {
+    var v = $("passInput").value.trim();
+    if (v === CLAVE_ACCESO) {
+      write(LS.unlocked, true);
+      $("lockError").hidden = true;
+      state.baby ? showApp() : showOnly("screen-onboarding");
+    } else {
+      $("lockError").hidden = false;
+    }
+  }
+  $("btnDesbloquear").addEventListener("click", tryUnlock);
+  $("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryUnlock(); });
+
+  /* ---------- Onboarding ---------- */
+  $("btnGuardarBebe").addEventListener("click", function () {
+    var name = $("obName").value.trim();
+    var birth = $("obBirth").value;
+    var valid = name && birth && new Date(birth + "T00:00:00") <= new Date();
+    if (!valid) { $("obError").hidden = false; return; }
+    state.baby = { name: name, birthdate: birth };
+    write(LS.baby, state.baby);
+    showApp();
+  });
+
+  /* ---------- Navegación ---------- */
+  var VIEWS = ["view-inicio", "view-registro", "view-historial", "view-guia", "view-anio", "view-ajustes"];
+  function goto(viewId) {
+    VIEWS.forEach(function (v) { $(v).hidden = v !== viewId; });
+    document.querySelectorAll(".nav-btn").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.goto === viewId);
+    });
+    window.scrollTo(0, 0);
+    renderAll();
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-goto]");
+    if (t) goto(t.dataset.goto);
+  });
+
+  /* ---------- Registros: CRUD ---------- */
+  var TYPE_META = {
+    alimentacion: { label: "Alimentación", emoji: "🍼" },
+    sueno: { label: "Sueño", emoji: "😴" },
+    panal: { label: "Pañal", emoji: "🧷" },
+    nota: { label: "Nota", emoji: "📝" }
+  };
+
+  function saveRecords() { write(LS.records, state.records); }
+
+  function recordDetail(r) {
+    if (r.type === "alimentacion") {
+      var parts = [r.sub];
+      if (r.cantidad) parts.push(r.cantidad);
+      if (r.nota) parts.push(r.nota);
+      return parts.filter(Boolean).join(" · ");
+    }
+    if (r.type === "sueno") {
+      var d = "";
+      if (r.fin) {
+        var mins = Math.max(0, Math.round((new Date(r.fin) - new Date(r.fecha)) / 60000));
+        var h = Math.floor(mins / 60), m = mins % 60;
+        d = "Durmió " + (h ? h + " h " : "") + m + " min";
+      } else d = "Se durmió (sin hora de despertar)";
+      return [d, r.nota].filter(Boolean).join(" · ");
+    }
+    if (r.type === "panal") return [r.sub, r.nota].filter(Boolean).join(" · ");
+    return r.nota || "";
+  }
+
+  /* ---------- Formularios de registro ---------- */
+  document.querySelectorAll(".type-btn").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state.formType = b.dataset.type;
+      state.editingId = null;
+      renderForm();
+    });
+  });
+
+  function segRow(name, options, selected) {
+    return '<div class="seg-row" data-seg="' + name + '">' + options.map(function (o) {
+      return '<button type="button" class="seg' + (o === selected ? " selected" : "") + '" data-val="' + esc(o) + '">' + esc(o) + "</button>";
+    }).join("") + "</div>";
+  }
+
+  function renderForm() {
+    var wrap = $("recordFormWrap");
+    document.querySelectorAll(".type-btn").forEach(function (b) {
+      b.classList.toggle("selected", b.dataset.type === state.formType);
+    });
+    if (!state.formType) { wrap.innerHTML = ""; return; }
+
+    var editing = state.editingId ? state.records.find(function (r) { return r.id === state.editingId; }) : null;
+    var t = state.formType;
+    var meta = TYPE_META[t];
+    var now = toLocalInputValue(new Date());
+    var html = '<div class="card"><p class="field-label" style="font-size:1rem">' + meta.emoji + " " +
+      (editing ? "Editar " : "Nuevo registro de ") + meta.label.toLowerCase() + "</p>";
+
+    html += '<label class="field-label" for="fFecha">Fecha y hora</label>' +
+      '<input type="datetime-local" id="fFecha" class="input" value="' + (editing ? toLocalInputValue(new Date(editing.fecha)) : now) + '">';
+
+    if (t === "alimentacion") {
+      html += '<label class="field-label">Tipo</label>' + segRow("sub", ["Pecho", "Biberón", "Sólidos"], editing ? editing.sub : "Pecho");
+      html += '<label class="field-label" for="fCant">Cantidad o tiempo (opcional)</label>' +
+        '<input type="text" id="fCant" class="input" placeholder="Ej. 120 ml · 15 min lado izquierdo" value="' + esc(editing && editing.cantidad || "") + '">';
+    }
+    if (t === "sueno") {
+      html += '<label class="field-label" for="fFin">¿Cuándo despertó? (opcional)</label>' +
+        '<input type="datetime-local" id="fFin" class="input" value="' + (editing && editing.fin ? toLocalInputValue(new Date(editing.fin)) : "") + '">';
+    }
+    if (t === "panal") {
+      html += '<label class="field-label">Tipo</label>' + segRow("sub", ["Pipí", "Popó", "Mixto"], editing ? editing.sub : "Pipí");
+    }
+    html += '<label class="field-label" for="fNota">' + (t === "nota" ? "Tu nota" : "Nota (opcional)") + "</label>" +
+      '<textarea id="fNota" class="input" placeholder="' + (t === "nota" ? "Ej. Hoy sonrió por primera vez 🥹" : "Algo que quieras recordar…") + '">' + esc(editing && editing.nota || "") + "</textarea>";
+
+    html += '<button class="btn btn-primary" id="btnSaveRec">' + (editing ? "Guardar cambios" : "Guardar registro") + "</button>";
+    if (editing) html += '<button class="btn btn-ghost" id="btnCancelEdit">Cancelar</button>';
+    html += '<p class="ok-msg" id="recOk" hidden>Guardado ✓</p></div>';
+    wrap.innerHTML = html;
+
+    wrap.querySelectorAll(".seg").forEach(function (s) {
+      s.addEventListener("click", function () {
+        s.parentElement.querySelectorAll(".seg").forEach(function (x) { x.classList.remove("selected"); });
+        s.classList.add("selected");
+      });
+    });
+
+    $("btnSaveRec").addEventListener("click", function () {
+      var fecha = $("fFecha").value;
+      if (!fecha) { $("fFecha").focus(); return; }
+      var rec = editing || { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), type: t };
+      rec.fecha = new Date(fecha).toISOString();
+      var seg = wrap.querySelector('[data-seg="sub"] .seg.selected');
+      if (seg) rec.sub = seg.dataset.val;
+      if (t === "alimentacion") rec.cantidad = $("fCant").value.trim();
+      if (t === "sueno") {
+        var fin = $("fFin").value;
+        rec.fin = fin ? new Date(fin).toISOString() : null;
+        if (rec.fin && new Date(rec.fin) < new Date(rec.fecha)) rec.fin = null;
+      }
+      rec.nota = $("fNota").value.trim();
+      if (t === "nota" && !rec.nota) { $("fNota").focus(); return; }
+
+      if (!editing) state.records.push(rec);
+      saveRecords();
+      state.editingId = null;
+      renderForm();
+      var okWrap = $("recordFormWrap").querySelector(".ok-msg");
+      if (okWrap) { okWrap.hidden = false; setTimeout(function () { okWrap.hidden = true; }, 1800); }
+      renderAll();
+    });
+    var cancel = $("btnCancelEdit");
+    if (cancel) cancel.addEventListener("click", function () { state.editingId = null; renderForm(); });
+  }
+
+  function editRecord(id) {
+    var r = state.records.find(function (x) { return x.id === id; });
+    if (!r) return;
+    state.formType = r.type;
+    state.editingId = id;
+    goto("view-registro");
+    renderForm();
+  }
+  function deleteRecord(id) {
+    if (!confirm("¿Eliminar este registro?")) return;
+    state.records = state.records.filter(function (r) { return r.id !== id; });
+    saveRecords();
+    renderAll();
+  }
+
+  /* ---------- Render de listas ---------- */
+  function recHTML(r, showDate) {
+    var meta = TYPE_META[r.type];
+    return '<div class="rec">' +
+      '<div class="rec-ico ' + r.type + '">' + meta.emoji + "</div>" +
+      '<div class="rec-body">' +
+      '<div class="rec-title">' + meta.label + (r.sub ? " · " + esc(r.sub) : "") + "</div>" +
+      '<div class="rec-detail">' + esc(recordDetail(r)) + "</div>" +
+      '<div class="rec-actions">' +
+      '<button class="rec-edit" data-edit="' + r.id + '">Editar</button>' +
+      '<button class="rec-del" data-del="' + r.id + '">Eliminar</button>' +
+      "</div></div>" +
+      '<span class="rec-time">' + fmtTime(r.fecha) + "</span></div>";
+  }
+
+  document.addEventListener("click", function (e) {
+    var ed = e.target.closest("[data-edit]");
+    if (ed) { editRecord(ed.dataset.edit); return; }
+    var del = e.target.closest("[data-del]");
+    if (del) deleteRecord(del.dataset.del);
+  });
+
+  function sortedRecords() {
+    return state.records.slice().sort(function (a, b) { return new Date(b.fecha) - new Date(a.fecha); });
+  }
+
+  function renderTodayRecords() {
+    var today = new Date();
+    var list = sortedRecords().filter(function (r) { return sameDay(new Date(r.fecha), today); });
+    $("todayRecords").innerHTML = list.length
+      ? list.slice(0, 6).map(function (r) { return recHTML(r); }).join("")
+      : '<div class="empty">Aún no hay registros hoy. Toca «Registrar» para empezar 💛</div>';
+  }
+
+  function renderHistory() {
+    var list = sortedRecords();
+    if (state.filter !== "todos") list = list.filter(function (r) { return r.type === state.filter; });
+    if (!list.length) {
+      $("historyList").innerHTML = '<div class="empty">No hay registros con este filtro todavía.</div>';
+      return;
+    }
+    var html = "", lastDay = "";
+    list.forEach(function (r) {
+      var day = fmtDay(r.fecha);
+      if (day !== lastDay) { html += '<p class="day-sep">' + day + "</p>"; lastDay = day; }
+      html += recHTML(r);
+    });
+    $("historyList").innerHTML = html;
+  }
+
+  document.querySelectorAll(".filter-chip").forEach(function (c) {
+    c.addEventListener("click", function () {
+      state.filter = c.dataset.filter;
+      document.querySelectorAll(".filter-chip").forEach(function (x) { x.classList.toggle("active", x === c); });
+      renderHistory();
+    });
+  });
+
+  /* ---------- Resúmenes ---------- */
+  function countIn(list) {
+    var c = { alimentacion: 0, sueno: 0, panal: 0, nota: 0 };
+    list.forEach(function (r) { c[r.type]++; });
+    return c;
+  }
+  function summaryHTML(c) {
+    return ["alimentacion", "sueno", "panal", "nota"].map(function (t) {
+      return '<div class="sum-card"><span class="e">' + TYPE_META[t].emoji + '</span><span class="n">' + c[t] + '</span><span class="l">' + TYPE_META[t].label + "</span></div>";
+    }).join("");
+  }
+  function renderSummaries() {
+    var now = new Date();
+    var today = state.records.filter(function (r) { return sameDay(new Date(r.fecha), now); });
+    $("todaySummary").innerHTML = summaryHTML(countIn(today));
+    var weekAgo = new Date(now - 7 * 24 * 3600 * 1000);
+    var week = state.records.filter(function (r) { return new Date(r.fecha) >= weekAgo; });
+    $("weekSummary").innerHTML = summaryHTML(countIn(week));
+  }
+
+  /* ---------- Guía diaria ---------- */
+  function currentMonthIndex() {
+    var age = babyAge(state.baby.birthdate);
+    return Math.min(Math.max(age.months, 0), 11);
+  }
+  function todaysActivity() {
+    var m = currentMonthIndex();
+    var acts = ACTIVIDADES[m];
+    var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    return { month: m, act: acts[dayOfYear % acts.length] };
+  }
+  function renderGuide() {
+    var age = babyAge(state.baby.birthdate);
+    var ta = todaysActivity();
+    var a = ta.act;
+    $("guiaSub").textContent = state.baby.name + " tiene " + age.text + ". Esta es su actividad de hoy:";
+    $("teaserTitle").textContent = a.titulo;
+    $("activityCard").innerHTML =
+      '<p class="act-month">' + MESES_INFO[ta.month].t + "</p>" +
+      '<p class="act-title">' + esc(a.titulo) + "</p>" +
+      step(1, "Qué vas a hacer", a.que) +
+      step(2, "Cómo hacerlo", a.como) +
+      step(3, "Duración", a.dur) +
+      step(4, "Beneficios", a.ben) +
+      step(5, "Qué observar después", a.obs);
+  }
+  function step(n, label, text) {
+    return '<div class="act-step"><span class="act-step-label"><span class="dot">' + n + "</span>" + label + '</span><p>' + esc(text) + "</p></div>";
+  }
+
+  /* ---------- El primer año ---------- */
+  function renderYear() {
+    var age = babyAge(state.baby.birthdate);
+    var cur = age.months; // mes en curso = índice
+    $("anioSub").textContent = state.baby.name + " está en su " + monthOrdinal(Math.min(cur, 11) + 1) + " mes 🌸";
+    $("yearPath").innerHTML = MESES_INFO.map(function (m, i) {
+      var cls = i < cur ? "past" : (i === Math.min(cur, 11) && cur <= 11 ? "current" : "future");
+      if (cur > 11) cls = "past";
+      return '<div class="ym ' + cls + '"><p class="ym-title">' + m.t +
+        (cls === "current" ? '<span class="ym-now">AQUÍ ESTÁ</span>' : "") +
+        '</p><p class="ym-desc">' + m.d + "</p></div>";
+    }).join("");
+  }
+  function monthOrdinal(n) {
+    var o = ["primer", "segundo", "tercer", "cuarto", "quinto", "sexto", "séptimo", "octavo", "noveno", "décimo", "undécimo", "duodécimo"];
+    return o[n - 1] || n + "º";
+  }
+
+  /* ---------- Cabecera e inicio ---------- */
+  function renderHeader() {
+    var age = babyAge(state.baby.birthdate);
+    $("tbName").textContent = state.baby.name;
+    $("tbAge").textContent = age.text;
+    var h = new Date().getHours();
+    $("heroGreet").textContent = h < 12 ? "Buenos días ☀️" : h < 19 ? "Buenas tardes 🌤" : "Buenas noches 🌙";
+    $("heroAge").textContent = state.baby.name + " tiene " + age.text;
+  }
+
+  /* ---------- Ajustes ---------- */
+  $("btnSaveSettings").addEventListener("click", function () {
+    var name = $("setName").value.trim();
+    var birth = $("setBirth").value;
+    if (!name || !birth || new Date(birth + "T00:00:00") > new Date()) return;
+    state.baby = { name: name, birthdate: birth };
+    write(LS.baby, state.baby);
+    $("setOk").hidden = false;
+    setTimeout(function () { $("setOk").hidden = true; }, 1800);
+    renderAll();
+  });
+  $("btnBorrarTodo").addEventListener("click", function () {
+    if (!confirm("¿Seguro que quieres borrar TODOS los registros? Esta acción no se puede deshacer.")) return;
+    state.records = [];
+    saveRecords();
+    renderAll();
+  });
+
+  /* ---------- Render global ---------- */
+  function renderAll() {
+    if (!state.baby) return;
+    renderHeader();
+    renderSummaries();
+    renderTodayRecords();
+    renderHistory();
+    renderGuide();
+    renderYear();
+    $("setName").value = state.baby.name;
+    $("setBirth").value = state.baby.birthdate;
+  }
+
+  /* ---------- Service Worker ---------- */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () { /* la app funciona igual sin SW */ });
+    });
+  }
+
+  boot();
+})();
+
+  </script>
 </body>
 </html>

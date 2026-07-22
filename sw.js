@@ -1,14 +1,10 @@
 /* Mi Bebé Hoy · Service Worker básico (cache-first con rutas relativas) */
-var CACHE = "mibebehoy-v2";
+var CACHE = "mibebehoy-v3";
 var ASSETS = [
   "./",
   "./index.html",
-  "./css/styles.css",
-  "./js/app.js",
   "./manifest.webmanifest",
-  "./img/logo-bebe.png",
-  "./img/icon-192.png",
-  "./img/icon-512.png"
+  "./bebe.png.png"
 ];
 
 self.addEventListener("install", function (e) {
