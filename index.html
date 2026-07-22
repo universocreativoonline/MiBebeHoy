@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi Bebé Hoy</title>
+  <meta name="description" content="Registro diario y acompañamiento del primer año de tu bebé.">
+  <meta name="theme-color" content="#FFF6EF">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mi Bebé Hoy">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ============ PANTALLA DE BIENVENIDA / ACCESO ============ -->
+  <section id="screen-lock" class="lockscreen" hidden>
+    <div class="lock-inner">
+      <div class="lock-logo-wrap">
+        <img src="img/logo-bebe.png" alt="Bebé sonriendo en una macetita" class="lock-logo" id="lockLogo">
+        <span class="sparkle s1">✦</span>
+        <span class="sparkle s2">✦</span>
+        <span class="sparkle s3">✦</span>
+      </div>
+      <h1 class="lock-title">Mi Bebé Hoy</h1>
+      <p class="lock-sub">Tu compañía diaria durante el primer año de tu bebé.</p>
+
+      <div id="lockStep1">
+        <button class="btn btn-primary btn-big" id="btnComenzar">Comenzar</button>
+      </div>
+
+      <div id="lockStep2" hidden>
+        <label class="field-label" for="passInput">Escribe tu clave de acceso</label>
+        <input type="password" id="passInput" class="input input-center" placeholder="Clave de acceso" autocomplete="off" inputmode="text">
+        <p class="lock-hint">La encuentras en tu PDF de compra.</p>
+        <p class="lock-error" id="lockError" hidden>Esa clave no es correcta. Revísala e inténtalo de nuevo.</p>
+        <button class="btn btn-primary btn-big" id="btnDesbloquear">Entrar</button>
+        <button class="btn btn-ghost" id="btnVolverLock">Volver</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ONBOARDING: DATOS DEL BEBÉ ============ -->
+  <section id="screen-onboarding" class="lockscreen" hidden>
+    <div class="lock-inner">
+      <img src="img/logo-bebe.png" alt="" class="lock-logo lock-logo-sm">
+      <h2 class="lock-title">¡Bienvenida! 🌱</h2>
+      <p class="lock-sub">Cuéntanos de tu bebé para acompañarlos cada día.</p>
+      <label class="field-label" for="obName">Nombre de tu bebé</label>
+      <input type="text" id="obName" class="input input-center" placeholder="Ej. Emma" maxlength="30">
+      <label class="field-label" for="obBirth">Fecha de nacimiento</label>
+      <input type="date" id="obBirth" class="input input-center">
+      <p class="lock-error" id="obError" hidden>Completa el nombre y una fecha válida (no futura).</p>
+      <button class="btn btn-primary btn-big" id="btnGuardarBebe">Guardar y empezar</button>
+    </div>
+  </section>
+
+  <!-- ============ APP PRINCIPAL ============ -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <img src="img/logo-bebe.png" alt="" class="topbar-logo">
+      <div class="topbar-text">
+        <span class="topbar-name" id="tbName">Mi bebé</span>
+        <span class="topbar-age" id="tbAge"></span>
+      </div>
+    </header>
+
+    <main id="main">
+
+      <!-- ====== INICIO ====== -->
+      <section class="view" id="view-inicio">
+        <div class="card card-hero">
+          <p class="hero-greet" id="heroGreet">Hola</p>
+          <p class="hero-age" id="heroAge"></p>
+          <button class="chip-link" data-goto="view-anio">Ver el primer año de mi bebé →</button>
+        </div>
+
+        <h2 class="section-title">Hoy</h2>
+        <div class="summary-row" id="todaySummary"></div>
+
+        <div class="card card-guide-teaser" id="guideTeaser">
+          <p class="teaser-eyebrow">Tu guía de hoy</p>
+          <p class="teaser-title" id="teaserTitle"></p>
+          <button class="btn btn-soft" data-goto="view-guia">Ver actividad de hoy</button>
+        </div>
+
+        <div class="section-head">
+          <h2 class="section-title">Últimos registros de hoy</h2>
+          <button class="chip-link" data-goto="view-historial">Ver todo</button>
+        </div>
+        <div id="todayRecords" class="records-list"></div>
+      </section>
+
+      <!-- ====== REGISTRO ====== -->
+      <section class="view" id="view-registro" hidden>
+        <h2 class="section-title">Registrar</h2>
+        <div class="type-grid">
+          <button class="type-btn t-ali" data-type="alimentacion"><span class="type-emoji">🍼</span>Alimentación</button>
+          <button class="type-btn t-sue" data-type="sueno"><span class="type-emoji">😴</span>Sueño</button>
+          <button class="type-btn t-pan" data-type="panal"><span class="type-emoji">🧷</span>Pañal</button>
+          <button class="type-btn t-not" data-type="nota"><span class="type-emoji">📝</span>Nota</button>
+        </div>
+        <div id="recordFormWrap"></div>
+
+        <h2 class="section-title">Resumen de la semana</h2>
+        <div class="summary-row" id="weekSummary"></div>
+      </section>
+
+      <!-- ====== HISTORIAL ====== -->
+      <section class="view" id="view-historial" hidden>
+        <h2 class="section-title">Historial</h2>
+        <div class="filter-row" id="filterRow">
+          <button class="filter-chip active" data-filter="todos">Todos</button>
+          <button class="filter-chip" data-filter="alimentacion">🍼 Alimentación</button>
+          <button class="filter-chip" data-filter="sueno">😴 Sueño</button>
+          <button class="filter-chip" data-filter="panal">🧷 Pañales</button>
+          <button class="filter-chip" data-filter="nota">📝 Notas</button>
+        </div>
+        <div id="historyList" class="records-list"></div>
+      </section>
+
+      <!-- ====== GUÍA DIARIA ====== -->
+      <section class="view" id="view-guia" hidden>
+        <h2 class="section-title">Tu guía de hoy</h2>
+        <p class="section-sub" id="guiaSub"></p>
+        <div class="card card-activity" id="activityCard"></div>
+        <button class="chip-link" data-goto="view-anio">Ver el primer año de mi bebé →</button>
+      </section>
+
+      <!-- ====== EL PRIMER AÑO ====== -->
+      <section class="view" id="view-anio" hidden>
+        <h2 class="section-title">El primer año de mi bebé</h2>
+        <p class="section-sub" id="anioSub"></p>
+        <div class="year-path" id="yearPath"></div>
+      </section>
+
+      <!-- ====== AJUSTES ====== -->
+      <section class="view" id="view-ajustes" hidden>
+        <h2 class="section-title">Ajustes</h2>
+        <div class="card">
+          <label class="field-label" for="setName">Nombre de tu bebé</label>
+          <input type="text" id="setName" class="input" maxlength="30">
+          <label class="field-label" for="setBirth">Fecha de nacimiento</label>
+          <input type="date" id="setBirth" class="input">
+          <button class="btn btn-primary" id="btnSaveSettings">Guardar cambios</button>
+          <p class="ok-msg" id="setOk" hidden>Cambios guardados ✓</p>
+        </div>
+        <div class="card">
+          <p class="field-label">Tus datos</p>
+          <p class="small-text">Todo se guarda únicamente en este teléfono. Nada sale de tu dispositivo.</p>
+          <button class="btn btn-danger-soft" id="btnBorrarTodo">Borrar todos los registros</button>
+        </div>
+        <p class="disclaimer">Mi Bebé Hoy es una herramienta de organización y registro. No brinda diagnósticos ni reemplaza la consulta con profesionales de la salud.</p>
+      </section>
+
+    </main>
+
+    <!-- ====== NAVEGACIÓN INFERIOR ====== -->
+    <nav class="bottomnav">
+      <button class="nav-btn active" data-goto="view-inicio"><span class="nav-ico">🏠</span><span>Inicio</span></button>
+      <button class="nav-btn" data-goto="view-registro"><span class="nav-ico">➕</span><span>Registrar</span></button>
+      <button class="nav-btn" data-goto="view-historial"><span class="nav-ico">📖</span><span>Historial</span></button>
+      <button class="nav-btn" data-goto="view-guia"><span class="nav-ico">🌱</span><span>Guía</span></button>
+      <button class="nav-btn" data-goto="view-ajustes"><span class="nav-ico">⚙️</span><span>Ajustes</span></button>
+    </nav>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
