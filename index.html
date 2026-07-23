@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mi Bebé Hoy</title>
-  <meta name="description" content="Registro diario y acompañamiento del primer año de tu bebé.">
+  <meta name="description" content="Tu guía diaria de acompañamiento durante el primer año de tu bebé.">
   <meta name="theme-color" content="#FFF6EF">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="bebe.png.png">
@@ -17,9 +17,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
 /* ============================================================
-   Mi Bebé Hoy
-   Paleta derivada del logo: crema, rosa pastel, celeste,
-   amarillo macetita, verde brote, tinta café suave.
+   Mi Bebé Hoy · Guía de acompañamiento diario
+   Paleta pastel del logo: crema, rosa, celeste, amarillo, verde.
    ============================================================ */
 :root {
   --crema: #FFF6EF;
@@ -32,312 +31,193 @@
   --amarillo-fuerte: #E9C46A;
   --verde: #D4EDC4;
   --verde-fuerte: #8CC63F;
+  --lila: #E5DDF6;
   --tinta: #5B4A42;
   --tinta-suave: #8A776D;
   --sombra: 0 6px 18px rgba(91, 74, 66, 0.10);
   --radio: 22px;
-  --nav-h: 62px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 html, body { height: 100%; }
-
 body {
   font-family: 'Nunito', -apple-system, system-ui, sans-serif;
-  background: var(--crema);
-  color: var(--tinta);
-  line-height: 1.5;
+  background: var(--crema); color: var(--tinta); line-height: 1.55;
 }
-
-h1, h2, .lock-title, .teaser-title { font-family: 'Quicksand', 'Nunito', sans-serif; }
-
+h1, h2, h3, .lock-title { font-family: 'Quicksand', 'Nunito', sans-serif; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-input, textarea, select {
-  font-family: inherit; font-size: 1rem; color: var(--tinta);
-}
+input, textarea { font-family: inherit; font-size: 1rem; color: var(--tinta); }
 
-/* ================= PANTALLA DE BLOQUEO / ONBOARDING ================= */
+/* ---------- Pantallas de acceso y bienvenida ---------- */
 .lockscreen {
-  min-height: 100dvh;
-  display: flex; align-items: center; justify-content: center;
+  min-height: 100dvh; display: flex; align-items: center; justify-content: center;
   padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
   background:
-    radial-gradient(circle at 15% 20%, rgba(198, 230, 245, .55), transparent 45%),
-    radial-gradient(circle at 85% 15%, rgba(251, 233, 184, .55), transparent 45%),
-    radial-gradient(circle at 50% 95%, rgba(249, 211, 222, .65), transparent 55%),
+    radial-gradient(circle at 15% 20%, rgba(198,230,245,.55), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(251,233,184,.55), transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(249,211,222,.65), transparent 55%),
     var(--crema);
 }
 .lock-inner { width: 100%; max-width: 360px; text-align: center; }
 .lock-logo-wrap { position: relative; display: inline-block; margin-bottom: 8px; }
-.lock-logo {
-  width: 180px; height: 180px; border-radius: 44px;
-  box-shadow: var(--sombra);
-  animation: float 4s ease-in-out infinite;
-}
+.lock-logo { width: 180px; height: 180px; border-radius: 44px; box-shadow: var(--sombra); animation: float 4s ease-in-out infinite; }
 .lock-logo-sm { width: 110px; height: 110px; border-radius: 28px; margin-bottom: 10px; }
 @keyframes float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
-@media (prefers-reduced-motion: reduce) {
-  .lock-logo, .sparkle { animation: none !important; }
-}
-.sparkle {
-  position: absolute; color: var(--amarillo-fuerte); font-size: 1rem;
-  animation: twinkle 2.6s ease-in-out infinite; opacity: .8;
-}
-.s1 { top: -6px; right: -14px; }
-.s2 { bottom: 10px; left: -18px; animation-delay: .8s; color: var(--celeste-fuerte); }
+.sparkle { position: absolute; color: var(--amarillo-fuerte); font-size: 1rem; animation: twinkle 2.6s ease-in-out infinite; opacity: .8; }
+.s1 { top: -6px; right: -14px; } .s2 { bottom: 10px; left: -18px; animation-delay: .8s; color: var(--celeste-fuerte); }
 .s3 { top: 40%; right: -26px; animation-delay: 1.6s; color: var(--rosa-fuerte); }
 @keyframes twinkle { 0%,100% { opacity:.25; transform: scale(.8);} 50% { opacity:1; transform: scale(1.15);} }
-
+@media (prefers-reduced-motion: reduce) { .lock-logo, .sparkle { animation: none !important; } }
 .lock-title { font-size: 1.9rem; font-weight: 700; margin: 8px 0 4px; }
 .lock-sub { color: var(--tinta-suave); margin-bottom: 24px; }
 .lock-hint { font-size: .85rem; color: var(--tinta-suave); margin: 8px 0 4px; }
 .lock-error { color: #C0564F; font-size: .9rem; margin: 8px 0; font-weight: 600; }
 
-/* ================= BOTONES / INPUTS ================= */
-.btn {
-  display: block; width: 100%; padding: 14px 18px; border-radius: 999px;
-  font-size: 1.05rem; font-weight: 700; transition: transform .12s ease, box-shadow .12s ease;
-}
+.btn { display: block; width: 100%; padding: 14px 18px; border-radius: 999px; font-size: 1.05rem; font-weight: 700; transition: transform .12s ease; }
 .btn:active { transform: scale(.97); }
-.btn:focus-visible, .nav-btn:focus-visible, .type-btn:focus-visible, .filter-chip:focus-visible, .chip-link:focus-visible {
-  outline: 3px solid var(--celeste-fuerte); outline-offset: 2px;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--rosa-fuerte), #F5A8BB);
-  color: #fff; box-shadow: 0 8px 20px rgba(238, 143, 164, .40);
-}
+.btn:focus-visible, .mes-b:focus-visible { outline: 3px solid var(--celeste-fuerte); outline-offset: 2px; }
+.btn-primary { background: linear-gradient(135deg, var(--rosa-fuerte), #F5A8BB); color: #fff; box-shadow: 0 8px 20px rgba(238,143,164,.40); }
 .btn-big { padding: 16px; font-size: 1.12rem; }
 .btn-ghost { color: var(--tinta-suave); margin-top: 10px; font-weight: 600; }
-.btn-soft { background: var(--celeste); color: var(--tinta); margin-top: 12px; box-shadow: var(--sombra); }
+.btn-soft { background: var(--celeste); color: var(--tinta); box-shadow: var(--sombra); }
 .btn-danger-soft { background: #F6DDDA; color: #A34A43; margin-top: 12px; }
 .btn + .btn { margin-top: 10px; }
-
-.input {
-  width: 100%; padding: 13px 16px; border-radius: 16px;
-  border: 2px solid var(--rosa); background: var(--blanco);
-  margin: 6px 0 14px; outline: none;
-}
+.input { width: 100%; padding: 13px 16px; border-radius: 16px; border: 2px solid var(--rosa); background: var(--blanco); margin: 6px 0 14px; outline: none; }
 .input:focus { border-color: var(--rosa-fuerte); }
 .input-center { text-align: center; }
 .field-label { display: block; font-weight: 700; font-size: .92rem; text-align: left; }
 .lock-inner .field-label { text-align: center; margin-top: 6px; }
+textarea.input { resize: vertical; min-height: 64px; }
 
-/* ================= ESTRUCTURA APP ================= */
+/* ---------- App ---------- */
 .topbar {
-  position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
   padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
-  background: rgba(255, 246, 239, .92); backdrop-filter: blur(8px);
+  background: rgba(255,246,239,.92); backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(91,74,66,.07);
 }
 .topbar-logo { width: 42px; height: 42px; border-radius: 12px; }
-.topbar-text { display: flex; flex-direction: column; }
+.topbar-text { flex: 1; display: flex; flex-direction: column; }
 .topbar-name { font-weight: 800; font-size: 1.05rem; }
 .topbar-age { font-size: .82rem; color: var(--tinta-suave); }
+.gear { font-size: 1.3rem; padding: 6px 8px; border-radius: 12px; }
+.gear:active { background: var(--rosa); }
 
-#main {
-  max-width: 520px; margin: 0 auto;
-  padding: 18px 18px calc(var(--nav-h) + 24px + env(safe-area-inset-bottom));
-}
+#main { max-width: 520px; margin: 0 auto; padding: 18px 18px calc(28px + env(safe-area-inset-bottom)); }
 
-.section-title { font-size: 1.15rem; font-weight: 700; margin: 20px 0 10px; }
-.section-sub { color: var(--tinta-suave); font-size: .92rem; margin-bottom: 12px; }
-.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.card { background: var(--blanco); border-radius: var(--radio); padding: 20px; box-shadow: var(--sombra); margin-bottom: 16px; }
+.eyebrow { font-size: .76rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.card h3 { font-size: 1.18rem; font-weight: 700; margin-bottom: 8px; }
+.card p { font-size: .95rem; color: var(--tinta-suave); }
 
-.card {
-  background: var(--blanco); border-radius: var(--radio);
-  padding: 18px; box-shadow: var(--sombra); margin-bottom: 14px;
-}
-
-/* ---- Hero inicio ---- */
+/* Hero saludo */
 .card-hero {
   background: linear-gradient(135deg, var(--celeste) 0%, var(--rosa) 100%);
-  box-shadow: 0 10px 24px rgba(127, 190, 220, .25);
+  box-shadow: 0 10px 24px rgba(127,190,220,.25); text-align: center; padding: 26px 20px;
 }
-.hero-greet { font-weight: 700; font-size: 1.05rem; }
-.hero-age { font-family: 'Quicksand', sans-serif; font-size: 1.45rem; font-weight: 700; margin: 2px 0 8px; }
-.chip-link {
-  display: inline-block; font-weight: 700; font-size: .9rem;
-  color: var(--tinta); background: rgba(255,255,255,.55);
-  padding: 7px 14px; border-radius: 999px; margin-top: 4px;
-}
-.view > .chip-link { background: var(--amarillo); box-shadow: var(--sombra); }
+.hero-greet { font-family: 'Quicksand', sans-serif; font-size: 1.45rem; font-weight: 700; color: var(--tinta); }
+.hero-age { font-size: 1rem; color: var(--tinta); margin-top: 4px; font-weight: 700; }
+.hero-age span { background: rgba(255,255,255,.6); padding: 4px 12px; border-radius: 999px; display: inline-block; margin-top: 6px; }
 
-/* ---- Resúmenes ---- */
-.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.sum-card {
-  background: var(--blanco); border-radius: 18px; padding: 12px 6px;
-  text-align: center; box-shadow: var(--sombra);
+/* Primer año */
+.year-progress { height: 12px; border-radius: 999px; background: var(--crema); overflow: hidden; margin: 10px 0 16px; }
+.year-progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--verde-fuerte), var(--amarillo-fuerte)); transition: width .5s ease; }
+.mes-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.mes-b {
+  aspect-ratio: 1; border-radius: 16px; background: var(--crema);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .92rem; border: 2px solid transparent; transition: transform .12s ease;
 }
-.sum-card .n { font-size: 1.3rem; font-weight: 800; display: block; }
-.sum-card .l { font-size: .72rem; color: var(--tinta-suave); font-weight: 700; }
-.sum-card .e { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+.mes-b:active { transform: scale(.94); }
+.mes-b .me { font-size: .95rem; line-height: 1; }
+.mes-b.past { background: var(--verde); color: #45702A; }
+.mes-b.current { background: var(--rosa); border-color: var(--rosa-fuerte); box-shadow: 0 6px 14px rgba(238,143,164,.35); }
+.mes-b.future { opacity: .55; }
+.mes-b.selected { border-color: var(--tinta); }
+.mes-detail { margin-top: 14px; background: var(--crema); border-radius: 16px; padding: 14px 16px; }
+.mes-detail .md-t { font-weight: 800; font-size: .98rem; }
+.mes-detail .md-now { font-size: .7rem; font-weight: 800; background: var(--verde); color: #45702A; padding: 3px 10px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+.mes-detail p { font-size: .9rem; margin-top: 3px; }
 
-/* ---- Teaser guía ---- */
-.card-guide-teaser { background: var(--verde); box-shadow: 0 8px 20px rgba(140,198,63,.20); margin-top: 16px; }
-.teaser-eyebrow { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #5E8A3A; }
-.teaser-title { font-size: 1.15rem; font-weight: 700; margin: 4px 0 4px; }
+/* Actividad de hoy */
+.act-step { margin-bottom: 13px; }
+.act-step:last-child { margin-bottom: 0; }
+.act-step-label { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: .86rem; margin-bottom: 3px; color: var(--tinta); }
+.act-step-label .dot { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .72rem; flex-shrink: 0; }
+.d1 { background: var(--amarillo); } .d2 { background: var(--celeste); } .d3 { background: var(--verde); }
+.d4 { background: var(--rosa); } .d5 { background: var(--lila); }
+.act-title { font-family: 'Quicksand', sans-serif; font-size: 1.25rem; font-weight: 700; margin: 2px 0 14px; color: var(--tinta); }
 
-/* ---- Registros ---- */
-.records-list { display: flex; flex-direction: column; gap: 10px; }
-.rec {
-  display: flex; gap: 12px; align-items: flex-start;
-  background: var(--blanco); border-radius: 18px; padding: 13px 14px; box-shadow: var(--sombra);
+/* Tarjetas emocionales */
+.card-mama { background: var(--lila); box-shadow: 0 8px 20px rgba(160,140,210,.22); }
+.card-mama .eyebrow { color: #7B68B0; }
+.card-mama p, .card-motiv p { color: var(--tinta); }
+.card-motiv {
+  background: linear-gradient(135deg, var(--amarillo) 0%, var(--rosa) 100%);
+  box-shadow: 0 8px 20px rgba(233,196,106,.28); text-align: center; padding: 26px 22px;
 }
-.rec-ico {
-  width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
-}
-.rec-ico.alimentacion { background: var(--amarillo); }
-.rec-ico.sueno { background: var(--celeste); }
-.rec-ico.panal { background: var(--verde); }
-.rec-ico.nota { background: var(--rosa); }
-.rec-body { flex: 1; min-width: 0; }
-.rec-title { font-weight: 800; font-size: .95rem; }
-.rec-detail { font-size: .88rem; color: var(--tinta-suave); overflow-wrap: anywhere; }
-.rec-time { font-size: .78rem; color: var(--tinta-suave); font-weight: 700; white-space: nowrap; }
-.rec-actions { display: flex; gap: 6px; margin-top: 6px; }
-.rec-actions button {
-  font-size: .78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
-}
-.rec-edit { background: var(--celeste); }
-.rec-del { background: #F6DDDA; color: #A34A43; }
-.day-sep { font-size: .82rem; font-weight: 800; color: var(--tinta-suave); margin: 12px 0 2px; text-transform: capitalize; }
-.empty {
-  text-align: center; color: var(--tinta-suave); background: var(--blanco);
-  border-radius: 18px; padding: 22px 16px; box-shadow: var(--sombra); font-size: .92rem;
-}
+.card-motiv p { font-family: 'Quicksand', sans-serif; font-size: 1.12rem; font-weight: 600; line-height: 1.5; }
+.card-motiv .eyebrow { color: #B07A3A; }
 
-/* ---- Registro: selector de tipo ---- */
-.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.type-btn {
-  border-radius: 20px; padding: 16px 10px; font-weight: 800; font-size: .95rem;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  box-shadow: var(--sombra); transition: transform .12s ease;
-  border: 3px solid transparent;
-}
-.type-btn:active { transform: scale(.96); }
-.type-btn.selected { border-color: var(--tinta); }
-.type-emoji { font-size: 1.5rem; }
-.t-ali { background: var(--amarillo); }
-.t-sue { background: var(--celeste); }
-.t-pan { background: var(--verde); }
-.t-not { background: var(--rosa); }
+/* Salud y logros */
+.card-vacuna { background: var(--celeste); box-shadow: 0 8px 20px rgba(127,190,220,.25); }
+.card-vacuna .eyebrow { color: #3E7A99; }
+.card-vacuna p, .card-hito p { color: var(--tinta); }
+.vacuna-alert { background: rgba(255,255,255,.65); border-radius: 14px; padding: 10px 14px; margin-top: 10px; font-size: .88rem; font-weight: 700; }
+.card-hito { background: var(--verde); box-shadow: 0 8px 20px rgba(140,198,63,.22); }
+.card-hito .eyebrow { color: #5E8A3A; }
+.vacuna-nota { font-size: .78rem !important; margin-top: 10px; color: var(--tinta-suave) !important; }
 
-.seg-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 14px; }
-.seg {
-  padding: 8px 14px; border-radius: 999px; background: var(--crema);
-  font-weight: 700; font-size: .88rem; border: 2px solid transparent;
+/* Logros / recuerdos */
+.btn-logro {
+  background: linear-gradient(135deg, var(--rosa-fuerte), var(--amarillo-fuerte));
+  color: #fff; font-size: 1.1rem; padding: 17px; box-shadow: 0 10px 24px rgba(238,143,164,.45);
 }
-.seg.selected { background: var(--rosa); border-color: var(--rosa-fuerte); }
-textarea.input { resize: vertical; min-height: 70px; }
+.recuerdo { display: flex; gap: 12px; align-items: flex-start; background: var(--blanco); border-radius: 18px; padding: 13px 15px; box-shadow: var(--sombra); margin-bottom: 10px; }
+.recuerdo .re { font-size: 1.3rem; }
+.recuerdo-body { flex: 1; min-width: 0; }
+.recuerdo-txt { font-weight: 700; font-size: .95rem; overflow-wrap: anywhere; }
+.recuerdo-fecha { font-size: .78rem; color: var(--tinta-suave); }
+.recuerdo-del { font-size: .75rem; font-weight: 700; color: #A34A43; background: #F6DDDA; padding: 4px 10px; border-radius: 999px; }
+.empty { text-align: center; color: var(--tinta-suave); background: var(--blanco); border-radius: 18px; padding: 20px 16px; box-shadow: var(--sombra); font-size: .9rem; }
+
+.section-title { font-size: 1.15rem; font-weight: 700; margin: 24px 0 12px; }
 .ok-msg { color: #5E8A3A; font-weight: 700; margin-top: 8px; font-size: .9rem; }
-
-/* ---- Filtros historial ---- */
-.filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 8px; }
-.filter-chip {
-  flex-shrink: 0; padding: 8px 14px; border-radius: 999px; background: var(--blanco);
-  font-weight: 700; font-size: .85rem; box-shadow: var(--sombra);
-}
-.filter-chip.active { background: var(--tinta); color: #fff; }
-
-/* ---- Guía diaria ---- */
-.card-activity { padding: 20px; }
-.act-month { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--rosa-fuerte); }
-.act-title { font-family: 'Quicksand', sans-serif; font-size: 1.3rem; font-weight: 700; margin: 4px 0 14px; }
-.act-step { margin-bottom: 14px; }
-.act-step-label {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-weight: 800; font-size: .85rem; margin-bottom: 3px;
-}
-.act-step-label .dot {
-  width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
-  align-items: center; justify-content: center; font-size: .72rem; color: var(--tinta);
-}
-.act-step:nth-of-type(1) .dot { background: var(--amarillo); }
-.act-step:nth-of-type(2) .dot { background: var(--celeste); }
-.act-step:nth-of-type(3) .dot { background: var(--verde); }
-.act-step:nth-of-type(4) .dot { background: var(--rosa); }
-.act-step:nth-of-type(5) .dot { background: var(--amarillo); }
-.act-step p { font-size: .93rem; color: var(--tinta-suave); }
-
-/* ---- El primer año: caminito de brotes ---- */
-.year-path { position: relative; padding-left: 34px; }
-.year-path::before {
-  content: ""; position: absolute; left: 15px; top: 14px; bottom: 14px;
-  width: 4px; border-radius: 4px;
-  background: linear-gradient(180deg, var(--verde-fuerte), var(--verde));
-}
-.ym {
-  position: relative; background: var(--blanco); border-radius: 18px;
-  padding: 13px 15px; margin-bottom: 12px; box-shadow: var(--sombra);
-}
-.ym::before {
-  content: "🌱"; position: absolute; left: -34px; top: 12px;
-  width: 30px; height: 30px; border-radius: 50%;
-  background: var(--verde); display: flex; align-items: center; justify-content: center;
-  font-size: .85rem;
-}
-.ym.past { opacity: .78; }
-.ym.past::before { content: "✓"; background: var(--verde-fuerte); color: #fff; font-weight: 800; }
-.ym.future { opacity: .55; }
-.ym.future::before { content: ""; background: var(--crema); border: 3px solid var(--verde); }
-.ym.current {
-  border: 3px solid var(--verde-fuerte);
-  box-shadow: 0 10px 24px rgba(140,198,63,.28);
-}
-.ym.current::before { content: "🌸"; background: var(--rosa); }
-.ym-title { font-weight: 800; font-size: .98rem; }
-.ym-now { font-size: .72rem; font-weight: 800; background: var(--verde); color: #45702A; padding: 3px 10px; border-radius: 999px; margin-left: 6px; }
-.ym-desc { font-size: .86rem; color: var(--tinta-suave); margin-top: 2px; }
-
-/* ---- Ajustes ---- */
 .small-text { font-size: .88rem; color: var(--tinta-suave); margin: 6px 0 4px; }
-.disclaimer {
-  font-size: .8rem; color: var(--tinta-suave); text-align: center;
-  padding: 10px 14px 0; line-height: 1.45;
-}
+.disclaimer { font-size: .8rem; color: var(--tinta-suave); text-align: center; padding: 14px 14px 0; line-height: 1.45; }
+#ajustes[hidden] { display: none; }
 
-/* ================= NAV INFERIOR (safe-area iPhone) ================= */
-.bottomnav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
-  display: flex; justify-content: space-around;
-  background: rgba(255,255,255,.95); backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(91,74,66,.08);
-  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+/* Modal celebrar logro */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(91,74,66,.35); z-index: 40;
+  display: flex; align-items: flex-end; justify-content: center;
 }
-.nav-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  font-size: .68rem; font-weight: 700; color: var(--tinta-suave);
-  padding: 4px 8px; border-radius: 14px; min-width: 58px;
+.modal {
+  background: var(--blanco); border-radius: 26px 26px 0 0; width: 100%; max-width: 520px;
+  padding: 24px 22px calc(24px + env(safe-area-inset-bottom));
+  animation: up .25s ease;
 }
-.nav-ico { font-size: 1.25rem; }
-.nav-btn.active { color: var(--tinta); background: var(--rosa); }
-
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal h3 { font-size: 1.2rem; margin-bottom: 4px; }
+.modal .small-text { margin-bottom: 8px; }
   </style>
 </head>
 <body>
 
-  <!-- ============ PANTALLA DE BIENVENIDA / ACCESO ============ -->
+  <!-- ====== ACCESO ====== -->
   <section id="screen-lock" class="lockscreen" hidden>
     <div class="lock-inner">
       <div class="lock-logo-wrap">
-        <img src="bebe.png.png" alt="Bebé sonriendo en una macetita" class="lock-logo" id="lockLogo">
-        <span class="sparkle s1">✦</span>
-        <span class="sparkle s2">✦</span>
-        <span class="sparkle s3">✦</span>
+        <img src="bebe.png.png" alt="Bebé sonriendo en una macetita" class="lock-logo">
+        <span class="sparkle s1">✦</span><span class="sparkle s2">✦</span><span class="sparkle s3">✦</span>
       </div>
       <h1 class="lock-title">Mi Bebé Hoy</h1>
       <p class="lock-sub">Tu compañía diaria durante el primer año de tu bebé.</p>
-
       <div id="lockStep1">
         <button class="btn btn-primary btn-big" id="btnComenzar">Comenzar</button>
       </div>
-
       <div id="lockStep2" hidden>
         <label class="field-label" for="passInput">Escribe tu clave de acceso</label>
-        <input type="password" id="passInput" class="input input-center" placeholder="Clave de acceso" autocomplete="off" inputmode="text">
+        <input type="password" id="passInput" class="input input-center" placeholder="Clave de acceso" autocomplete="off">
         <p class="lock-hint">La encuentras en tu PDF de compra.</p>
         <p class="lock-error" id="lockError" hidden>Esa clave no es correcta. Revísala e inténtalo de nuevo.</p>
         <button class="btn btn-primary btn-big" id="btnDesbloquear">Entrar</button>
@@ -346,102 +226,104 @@ textarea.input { resize: vertical; min-height: 70px; }
     </div>
   </section>
 
-  <!-- ============ ONBOARDING: DATOS DEL BEBÉ ============ -->
+  <!-- ====== PRIMERA VEZ: DATOS DEL BEBÉ ====== -->
   <section id="screen-onboarding" class="lockscreen" hidden>
     <div class="lock-inner">
       <img src="bebe.png.png" alt="" class="lock-logo lock-logo-sm">
-      <h2 class="lock-title">¡Bienvenida! 🌱</h2>
-      <p class="lock-sub">Cuéntanos de tu bebé para acompañarlos cada día.</p>
-      <label class="field-label" for="obName">Nombre de tu bebé</label>
+      <h2 class="lock-title">¡Qué alegría tenerte aquí! 🌸</h2>
+      <p class="lock-sub">Cuéntanos de tu bebé para acompañarlos, a ti y a él, todos los días.</p>
+      <label class="field-label" for="obName">¿Cómo se llama tu bebé?</label>
       <input type="text" id="obName" class="input input-center" placeholder="Ej. Emma" maxlength="30">
-      <label class="field-label" for="obBirth">Fecha de nacimiento</label>
+      <label class="field-label" for="obBirth">¿Cuándo nació?</label>
       <input type="date" id="obBirth" class="input input-center">
       <p class="lock-error" id="obError" hidden>Completa el nombre y una fecha válida (no futura).</p>
-      <button class="btn btn-primary btn-big" id="btnGuardarBebe">Guardar y empezar</button>
+      <button class="btn btn-primary btn-big" id="btnGuardarBebe">Comenzar nuestro viaje 💛</button>
     </div>
   </section>
 
-  <!-- ============ APP PRINCIPAL ============ -->
+  <!-- ====== APP ====== -->
   <div id="app" hidden>
     <header class="topbar">
       <img src="bebe.png.png" alt="" class="topbar-logo">
       <div class="topbar-text">
-        <span class="topbar-name" id="tbName">Mi bebé</span>
+        <span class="topbar-name" id="tbName">Mi Bebé Hoy</span>
         <span class="topbar-age" id="tbAge"></span>
       </div>
+      <button class="gear" id="btnGear" aria-label="Ajustes">⚙️</button>
     </header>
 
     <main id="main">
 
-      <!-- ====== INICIO ====== -->
-      <section class="view" id="view-inicio">
-        <div class="card card-hero">
-          <p class="hero-greet" id="heroGreet">Hola</p>
-          <p class="hero-age" id="heroAge"></p>
-          <button class="chip-link" data-goto="view-anio">Ver el primer año de mi bebé →</button>
-        </div>
+      <!-- Saludo -->
+      <div class="card card-hero">
+        <p class="hero-greet" id="heroGreet"></p>
+        <p class="hero-age" id="heroSub"></p>
+        <p class="hero-age"><span id="heroAge"></span></p>
+      </div>
 
-        <h2 class="section-title">Hoy</h2>
-        <div class="summary-row" id="todaySummary"></div>
+      <!-- El primer año -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--verde-fuerte)">🌱 El primer año de mi bebé</p>
+        <p id="yearSub" style="margin-bottom:4px"></p>
+        <div class="year-progress"><div class="year-progress-fill" id="yearFill"></div></div>
+        <div class="mes-grid" id="mesGrid"></div>
+        <div class="mes-detail" id="mesDetail"></div>
+      </div>
 
-        <div class="card card-guide-teaser" id="guideTeaser">
-          <p class="teaser-eyebrow">Tu guía de hoy</p>
-          <p class="teaser-title" id="teaserTitle"></p>
-          <button class="btn btn-soft" data-goto="view-guia">Ver actividad de hoy</button>
-        </div>
+      <!-- Desarrollo de esta semana -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--celeste-fuerte)">✨ El desarrollo de esta semana</p>
+        <h3 id="devTitle"></h3>
+        <p id="devText"></p>
+      </div>
 
-        <div class="section-head">
-          <h2 class="section-title">Últimos registros de hoy</h2>
-          <button class="chip-link" data-goto="view-historial">Ver todo</button>
-        </div>
-        <div id="todayRecords" class="records-list"></div>
-      </section>
+      <!-- Qué esperar -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--amarillo-fuerte)">🔭 Qué esperar durante esta etapa</p>
+        <p id="expectText"></p>
+      </div>
 
-      <!-- ====== REGISTRO ====== -->
-      <section class="view" id="view-registro" hidden>
-        <h2 class="section-title">Registrar</h2>
-        <div class="type-grid">
-          <button class="type-btn t-ali" data-type="alimentacion"><span class="type-emoji">🍼</span>Alimentación</button>
-          <button class="type-btn t-sue" data-type="sueno"><span class="type-emoji">😴</span>Sueño</button>
-          <button class="type-btn t-pan" data-type="panal"><span class="type-emoji">🧷</span>Pañal</button>
-          <button class="type-btn t-not" data-type="nota"><span class="type-emoji">📝</span>Nota</button>
-        </div>
-        <div id="recordFormWrap"></div>
+      <!-- Actividad de hoy -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--rosa-fuerte)">🎈 Actividad recomendada para hoy</p>
+        <p class="act-title" id="actTitle"></p>
+        <div id="actSteps"></div>
+      </div>
 
-        <h2 class="section-title">Resumen de la semana</h2>
-        <div class="summary-row" id="weekSummary"></div>
-      </section>
+      <!-- Consejo para mamá -->
+      <div class="card card-mama">
+        <p class="eyebrow">💜 Consejo para mamá</p>
+        <p id="mamaText"></p>
+      </div>
 
-      <!-- ====== HISTORIAL ====== -->
-      <section class="view" id="view-historial" hidden>
-        <h2 class="section-title">Historial</h2>
-        <div class="filter-row" id="filterRow">
-          <button class="filter-chip active" data-filter="todos">Todos</button>
-          <button class="filter-chip" data-filter="alimentacion">🍼 Alimentación</button>
-          <button class="filter-chip" data-filter="sueno">😴 Sueño</button>
-          <button class="filter-chip" data-filter="panal">🧷 Pañales</button>
-          <button class="filter-chip" data-filter="nota">📝 Notas</button>
-        </div>
-        <div id="historyList" class="records-list"></div>
-      </section>
+      <!-- Mensaje motivacional -->
+      <div class="card card-motiv">
+        <p class="eyebrow">🌷 Mensaje del día para ti</p>
+        <p id="motivText"></p>
+      </div>
 
-      <!-- ====== GUÍA DIARIA ====== -->
-      <section class="view" id="view-guia" hidden>
-        <h2 class="section-title">Tu guía de hoy</h2>
-        <p class="section-sub" id="guiaSub"></p>
-        <div class="card card-activity" id="activityCard"></div>
-        <button class="chip-link" data-goto="view-anio">Ver el primer año de mi bebé →</button>
-      </section>
+      <!-- Salud -->
+      <h2 class="section-title">Salud y logros</h2>
+      <div class="card card-vacuna">
+        <p class="eyebrow">💉 Próxima vacuna</p>
+        <h3 id="vacTitle"></h3>
+        <p id="vacText"></p>
+        <div class="vacuna-alert" id="vacAlert" hidden></div>
+        <p class="vacuna-nota">Según el esquema oficial de vacunación de Colombia (PAI). Confirma fechas y dosis en tu centro de salud o con tu pediatra.</p>
+      </div>
+      <div class="card card-hito">
+        <p class="eyebrow">🌟 Próximo hito del desarrollo</p>
+        <p id="hitoText"></p>
+        <p class="vacuna-nota">Cada bebé tiene su propio ritmo; estos tiempos son solo una guía general.</p>
+      </div>
 
-      <!-- ====== EL PRIMER AÑO ====== -->
-      <section class="view" id="view-anio" hidden>
-        <h2 class="section-title">El primer año de mi bebé</h2>
-        <p class="section-sub" id="anioSub"></p>
-        <div class="year-path" id="yearPath"></div>
-      </section>
+      <!-- Logros -->
+      <button class="btn btn-logro" id="btnLogro">🎉 Celebrar un Logro</button>
+      <h2 class="section-title">Nuestros recuerdos</h2>
+      <div id="logrosList"></div>
 
-      <!-- ====== AJUSTES ====== -->
-      <section class="view" id="view-ajustes" hidden>
+      <!-- Ajustes -->
+      <div id="ajustes" hidden>
         <h2 class="section-title">Ajustes</h2>
         <div class="card">
           <label class="field-label" for="setName">Nombre de tu bebé</label>
@@ -450,112 +332,64 @@ textarea.input { resize: vertical; min-height: 70px; }
           <input type="date" id="setBirth" class="input">
           <button class="btn btn-primary" id="btnSaveSettings">Guardar cambios</button>
           <p class="ok-msg" id="setOk" hidden>Cambios guardados ✓</p>
-        </div>
-        <div class="card">
-          <p class="field-label">Tus datos</p>
+          <button class="btn btn-danger-soft" id="btnBorrarRecuerdos">Borrar todos los recuerdos</button>
           <p class="small-text">Todo se guarda únicamente en este teléfono. Nada sale de tu dispositivo.</p>
-          <button class="btn btn-danger-soft" id="btnBorrarTodo">Borrar todos los registros</button>
         </div>
-        <p class="disclaimer">Mi Bebé Hoy es una herramienta de organización y registro. No brinda diagnósticos ni reemplaza la consulta con profesionales de la salud.</p>
-      </section>
+      </div>
 
+      <p class="disclaimer">Mi Bebé Hoy es una herramienta de organización y registro. No brinda diagnósticos ni reemplaza la consulta con profesionales de la salud.</p>
     </main>
-
-    <!-- ====== NAVEGACIÓN INFERIOR ====== -->
-    <nav class="bottomnav">
-      <button class="nav-btn active" data-goto="view-inicio"><span class="nav-ico">🏠</span><span>Inicio</span></button>
-      <button class="nav-btn" data-goto="view-registro"><span class="nav-ico">➕</span><span>Registrar</span></button>
-      <button class="nav-btn" data-goto="view-historial"><span class="nav-ico">📖</span><span>Historial</span></button>
-      <button class="nav-btn" data-goto="view-guia"><span class="nav-ico">🌱</span><span>Guía</span></button>
-      <button class="nav-btn" data-goto="view-ajustes"><span class="nav-ico">⚙️</span><span>Ajustes</span></button>
-    </nav>
   </div>
 
   <script>
-/* ============================================================
-   Mi Bebé Hoy — Lógica principal (LocalStorage)
-   ============================================================ */
 (function () {
   "use strict";
 
   var CLAVE_ACCESO = "MiBebeDuerme2026";
-  var LS = {
-    unlocked: "bc_unlocked",
-    baby: "bc_baby",
-    records: "bc_records"
-  };
+  var LS = { unlocked: "bc_unlocked", baby: "bc_baby", logros: "bc_logros" };
 
-  /* ---------- Utilidades ---------- */
   function $(id) { return document.getElementById(id); }
-  function read(key, fallback) {
-    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
-    catch (e) { return fallback; }
-  }
-  function write(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+  function read(k, f) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+  function write(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function dayOfYear() { var n = new Date(); return Math.floor((n - new Date(n.getFullYear(), 0, 0)) / 86400000); }
 
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function toLocalInputValue(d) {
-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
-      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
-  }
-  function fmtTime(iso) {
-    var d = new Date(iso);
-    return pad(d.getHours()) + ":" + pad(d.getMinutes());
-  }
-  function fmtDay(iso) {
-    var d = new Date(iso);
-    return d.toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" });
-  }
-  function sameDay(a, b) {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-  }
-  function esc(s) {
-    return String(s || "").replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-
-  /* Edad en meses y semanas: "3 meses, 2 semanas" */
-  function babyAge(birthISO, ref) {
+  /* Edad exacta: meses, semanas y días */
+  function babyAge(birthISO) {
     var birth = new Date(birthISO + "T00:00:00");
-    var now = ref || new Date();
-    if (now < birth) return { months: 0, weeks: 0, text: "por nacer" };
-
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    if (now < birth) return { months: 0, weeks: 0, days: 0, text: "por nacer" };
     var months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
-    var anchor = new Date(birth);
-    anchor.setMonth(anchor.getMonth() + months);
-    if (anchor > now) { months--; anchor.setMonth(anchor.getMonth() - 1); }
-    var weeks = Math.floor((now - anchor) / (7 * 24 * 3600 * 1000));
-
-    var text;
-    if (months === 0 && weeks === 0) text = "recién nacido";
-    else if (months === 0) text = weeks + (weeks === 1 ? " semana" : " semanas");
-    else {
-      text = months + (months === 1 ? " mes" : " meses");
-      if (weeks > 0) text += ", " + weeks + (weeks === 1 ? " semana" : " semanas");
-    }
-    return { months: months, weeks: weeks, text: text };
+    var anchor = new Date(birth); anchor.setMonth(anchor.getMonth() + months);
+    if (anchor > now) { months--; anchor = new Date(birth); anchor.setMonth(anchor.getMonth() + months); }
+    var totalDays = Math.round((now - anchor) / 86400000);
+    var weeks = Math.floor(totalDays / 7), days = totalDays % 7;
+    var p = [];
+    if (months > 0) p.push(months + (months === 1 ? " mes" : " meses"));
+    if (weeks > 0) p.push(weeks + (weeks === 1 ? " semana" : " semanas"));
+    if (days > 0 || p.length === 0) p.push(days + (days === 1 ? " día" : " días"));
+    var text = p.length > 1 ? p.slice(0, -1).join(", ") + " y " + p[p.length - 1] : p[0];
+    if (months === 0 && weeks === 0 && days === 0) text = "recién nacido 🤍";
+    return { months: months, weeks: weeks, days: days, text: text };
   }
 
-  /* ---------- Contenido: 12 meses ---------- */
-  var MESES_INFO = [
-    { t: "Mes 1 · Conociéndose", d: "Tu bebé reconoce tu voz y tu olor. Todo gira alrededor del contacto y la calma." },
-    { t: "Mes 2 · Primeras sonrisas", d: "Aparecen las sonrisas sociales y sigue objetos con la mirada." },
-    { t: "Mes 3 · Descubre sus manos", d: "Sostiene mejor la cabeza y empieza a jugar con sus manitas." },
-    { t: "Mes 4 · Risas y giros", d: "Ríe a carcajadas y puede empezar a girar sobre sí mismo." },
-    { t: "Mes 5 · Todo a la boca", d: "Explora el mundo con la boca y alcanza objetos con intención." },
-    { t: "Mes 6 · Sentadito", d: "Muchos bebés empiezan a sentarse con apoyo y a probar alimentos." },
-    { t: "Mes 7 · Pequeño explorador", d: "Se desplaza rodando o arrastrándose y balbucea sílabas." },
-    { t: "Mes 8 · Gateo en camino", d: "Gana movilidad y puede extrañar cuando no te ve (¡es normal!)." },
-    { t: "Mes 9 · Se pone de pie", d: "Se apoya para pararse y entiende palabras cotidianas." },
-    { t: "Mes 10 · Primeros pasos con apoyo", d: "Camina sosteniéndose de los muebles y aplaude o dice adiós." },
-    { t: "Mes 11 · Casi caminando", d: "Se sostiene solo por momentos y señala lo que quiere." },
-    { t: "Mes 12 · ¡Feliz primer año!", d: "Puede dar sus primeros pasos y decir sus primeras palabras." }
+  /* ---------- Contenido por mes ---------- */
+  var MESES = [
+    { t: "Mes 1 · Conociéndose", sem: "Tu bebé está aterrizando en el mundo, y tú eres su mundo entero. Esta semana sigue afinando el oído: tu voz es el sonido que más lo calma, y tu olor, su lugar seguro.", esp: "Mucho sueño en tandas cortas, alimentación a demanda y llanto como único idioma. Es una etapa intensa: no la estás haciendo mal, así es el primer mes para todas.", hito: "Levantará brevemente la cabecita cuando esté boca abajo y se calmará al escuchar tu voz." },
+    { t: "Mes 2 · Primeras sonrisas", sem: "Esta semana pueden aparecer (o afianzarse) las sonrisas sociales: esas que son para ti, no un reflejo. También empieza a seguir objetos y rostros con la mirada.", esp: "Períodos despierto un poquito más largos, más sonidos de gorjeo y mayor interés por tu cara. El llanto de la tarde puede aumentar; suele ser pasajero.", hito: "Te regalará sonrisas sociales y seguirá objetos con la mirada de lado a lado." },
+    { t: "Mes 3 · Descubre sus manos", sem: "¡Gran descubrimiento en camino: sus propias manos! Esta semana puede pasar ratos mirándolas, juntándolas y llevándoselas a la boca. Su cabecita está cada vez más firme.", esp: "Más control del cuello, vocalizaciones tipo 'aaah' y 'eeeh', y quizás noches con tramos de sueño un poco más largos. Cada bebé lleva su ritmo.", hito: "Sostendrá la cabeza con firmeza y empezará a jugar con sus manitas." },
+    { t: "Mes 4 · Risas y giros", sem: "Semana de risas: las primeras carcajadas suelen llegar por esta etapa y son pura medicina. Su cuerpo practica el giro de boca arriba a boca abajo.", esp: "Puede aparecer la 'regresión del sueño de los 4 meses': despertares más frecuentes mientras su sueño madura. Es temporal, aunque agotador. Pide ayuda y descansa cuando puedas.", hito: "Reirá a carcajadas y podrá girar sobre sí mismo por primera vez." },
+    { t: "Mes 5 · Todo a la boca", sem: "Su boca es ahora su laboratorio: todo lo que toma va directo a ella, y así aprende. Esta semana su puntería para alcanzar objetos mejora notablemente.", esp: "Más babeo (posibles primeros dientitos en camino), giros más frecuentes y mucho interés por lo que comes. Aún no es señal de empezar sólidos: eso se conversa con el pediatra.", hito: "Alcanzará objetos con intención y los pasará de una mano a otra." },
+    { t: "Mes 6 · Sentadito", sem: "¡Medio año de tu bebé! Esta semana puede sostenerse sentado con apoyo y disfrutar su nueva vista del mundo. Para muchos, comienza la aventura de la alimentación complementaria.", esp: "Primeras comidas exploratorias (con guía de su pediatra), más movimiento en el piso y quizás los primeros dientes. El desorden al comer es aprendizaje puro.", hito: "Se sentará con apoyo y probará sus primeros alimentos." },
+    { t: "Mes 7 · Pequeño explorador", sem: "Esta semana el piso es su reino: rueda, gira y repta para llegar a lo que quiere. Sus balbuceos suenan cada vez más a sílabas: 'ba-ba', 'ma-ma'.", esp: "Desplazamientos creativos, sílabas repetidas y opiniones claras sobre lo que le gusta y lo que no. La casa empieza a necesitar ojos por todas partes.", hito: "Se desplazará rodando o arrastrándose y balbuceará sílabas como 'ma-ma'." },
+    { t: "Mes 8 · Gateo en camino", sem: "El gateo se acerca (o ya llegó): esta semana practica ponerse en cuatro puntos y mecerse. También puede llorar cuando sales de la habitación: te ama y aún no sabe que siempre vuelves.", esp: "Angustia de separación (completamente normal y sana), más movilidad y exploración incansable. Asegura muebles y enchufes: viene la etapa exploradora.", hito: "Comenzará a gatear o a desplazarse a su manera por toda la casa." },
+    { t: "Mes 9 · Se pone de pie", sem: "Esta semana quizás lo encuentres agarrado de la cuna o del sofá, ¡de pie! Entiende cada vez más palabras y adora los juegos de esconderse y aparecer.", esp: "Intentos de pararse por todas partes, comprensión de palabras cotidianas ('agua', 'adiós') y una pinza fina cada vez más precisa para tomar trocitos.", hito: "Se pondrá de pie sosteniéndose de los muebles y entenderá palabras cotidianas." },
+    { t: "Mes 10 · Pasos con apoyo", sem: "Semana de 'crucero': camina de lado sosteniéndose de los muebles, viajando de uno a otro. Sus gestos florecen: aplaude, dice adiós con la mano, tira besos.", esp: "Caminatas laterales por toda la sala, gestos sociales encantadores y quizás alguna primera palabra con sentido. Repetir sus sonidos multiplica su lenguaje.", hito: "Caminará sosteniéndose de los muebles y usará gestos como aplaudir y decir adiós." },
+    { t: "Mes 11 · Casi caminando", sem: "Esta semana puede soltarse por segunditos y sostenerse de pie solo. Señala con su dedito todo lo que le interesa: es su forma de preguntarte '¿y esto qué es?'.", esp: "Equilibrio en progreso, señalamientos constantes (¡nómbrale todo!) y comprensión de instrucciones simples como 'dame' o 'ven'.", hito: "Se sostendrá de pie solito por momentos y señalará lo que quiere." },
+    { t: "Mes 12 · ¡Feliz primer año!", sem: "¡Están cerrando un año inmenso! Esta semana puede regalarte primeros pasos sin apoyo o primeras palabras claras. Sea cual sea su ritmo, ha crecido muchísimo… y tú también.", esp: "Primeros pasos (entre los 9 y los 18 meses, todos son normales), primeras palabras y una personalidad que brilla. Prepárate para la aventura de caminar detrás de tu pequeño.", hito: "Dará sus primeros pasos sin apoyo y dirá sus primeras palabras con intención." }
   ];
 
-  /* Actividades diarias: por mes (0-11), cada una con la estructura de 5 puntos.
-     que = qué vas a hacer · como = cómo hacerlo · dur = duración
-     ben = beneficios · obs = qué observar después */
+  /* Actividades diarias (estructura de 5 puntos), 3 por mes */
   var ACTIVIDADES = [
     [ // Mes 1
       { titulo: "Tiempo piel con piel", que: "Un momento de contacto piel con piel con tu bebé.", como: "Recuéstate cómoda, coloca a tu bebé (solo con pañal) sobre tu pecho y cúbrelo con una mantita. Respira lento y háblale bajito.", dur: "15 a 20 minutos.", ben: "Regula su temperatura y ritmo cardíaco, favorece el vínculo y lo calma profundamente.", obs: "Observa si se relaja, se queda dormido o busca alimentarse. Son señales de que se siente seguro contigo." },
@@ -619,397 +453,266 @@ textarea.input { resize: vertical; min-height: 70px; }
     ]
   ];
 
+  /* Consejos para mamá (rotan cada día) */
+  var CONSEJOS_MAMA = [
+    "Dormir cuando el bebé duerme suena a cliché, pero incluso 20 minutos de descanso real cuentan. Los platos pueden esperar; tu energía no.",
+    "No tienes que poder con todo. Aceptar ayuda (con la comida, la limpieza, un turno de brazos) no te hace menos mamá: te hace una mamá cuidada.",
+    "Si hoy solo lograste mantener a tu bebé alimentado, limpio y amado, lograste todo lo importante. Lo demás es decoración.",
+    "Toma agua cada vez que alimentes a tu bebé. Tu cuerpo también está trabajando a tiempo completo y merece el mismo cuidado que le das a él.",
+    "Está bien llorar. La maternidad remueve todo. Si la tristeza se queda muchos días o se siente muy pesada, hablarlo con tu médico es un acto de amor propio.",
+    "Sal a la luz del día aunque sea 10 minutos con tu bebé. El sol y el aire fresco hacen maravillas por el ánimo de los dos.",
+    "Compararte con otras mamás (o con las de las redes) es injusto contigo: tú ves su película editada y tu detrás de cámaras. Lo estás haciendo bien.",
+    "Guarda una foto o video de hoy, aunque sea un martes cualquiera. Los días comunes son los que más vas a atesorar.",
+    "Pide a alguien de confianza que cuide al bebé 30 minutos y haz algo solo para ti: una ducha larga, un café caliente, una llamada con una amiga.",
+    "Tu bebé no necesita una mamá perfecta; te necesita a ti, presente e imperfecta. Eso ya lo tienes ganado.",
+    "Si la lactancia o la alimentación se siente cuesta arriba, buscar apoyo (asesoras, pediatra, otras mamás) no es rendirse: es rodearte de equipo.",
+    "Baja el listón de la casa: un hogar con juguetes regados y ropa sin doblar, pero con una mamá más tranquila, es un mejor hogar.",
+    "Habla contigo misma como le hablarías a tu mejor amiga si estuviera criando: con paciencia, ternura y cero juicios.",
+    "El cansancio de hoy no es para siempre. Cada etapa intensa pasa, y tú vas a mirar atrás asombrada de todo lo que fuiste capaz."
+  ];
+
+  /* Mensajes motivacionales del día */
+  var MOTIVACIONALES = [
+    "Hoy tu bebé no necesita nada extraordinario: te necesita a ti. Y tú ya estás aquí. 💛",
+    "Eres la primera casa, la primera canción y el primer amor de alguien. Qué manera tan hermosa de ser importante.",
+    "Respira. Lo que hoy se siente eterno, mañana será un recuerdo tierno. Vas mucho mejor de lo que crees.",
+    "Cada abrazo que das está construyendo, en silencio, la seguridad con la que tu bebé caminará por el mundo.",
+    "No estás sola: miles de mamás están despiertas contigo esta noche. Y todas, como tú, lo están logrando.",
+    "Tu bebé te mira y ve a su persona favorita del universo. Ese título ya es tuyo, sin condiciones.",
+    "Ser mamá es hacer mil cosas invisibles al día. Que nadie las vea no significa que no sostengan el mundo.",
+    "Hoy date el mismo cariño que le das a tu bebé. Tú también estás creciendo en esta etapa.",
+    "Los brazos cansados de cargar son los mismos que están criando a un ser humano increíble. Qué fuerza la tuya.",
+    "No hay manual perfecto: hay una mamá que ama, observa y aprende. Esa eres tú, y es más que suficiente.",
+    "Un día de estos vas a extrañar este caos hermoso. Mientras tanto, permítete vivirlo sin exigirte perfección.",
+    "Tu voz calma, tus brazos curan y tu presencia enseña. Tienes superpoderes y los usas todos los días.",
+    "Está bien no disfrutar cada minuto. Amar a tu bebé y estar agotada pueden convivir. Ambas cosas son verdad y ambas están bien.",
+    "Mírate: aprendiste a cuidar, calmar y amar a alguien nuevo en tiempo récord. Eres asombrosa, mamá."
+  ];
+
+  /* Esquema de vacunación de Colombia (PAI) - primer año */
+  var VACUNAS = [
+    { mes: 0, nombre: "Recién nacido: BCG y Hepatitis B", detalle: "Al nacer se aplican la BCG (contra la tuberculosis) y la primera dosis de Hepatitis B, normalmente antes de salir de la clínica." },
+    { mes: 2, nombre: "Vacunas de los 2 meses", detalle: "Primeras dosis de Pentavalente (difteria, tosferina, tétanos, hepatitis B e influenza tipo b), Polio, Rotavirus y Neumococo." },
+    { mes: 4, nombre: "Vacunas de los 4 meses", detalle: "Segundas dosis de Pentavalente, Polio, Rotavirus y Neumococo. Refuerzan la protección iniciada a los 2 meses." },
+    { mes: 6, nombre: "Vacunas de los 6 meses", detalle: "Terceras dosis de Pentavalente y Polio, y primera dosis de Influenza (la segunda de influenza se aplica unas 4 semanas después)." },
+    { mes: 12, nombre: "Vacunas de los 12 meses", detalle: "Triple viral (sarampión, rubéola y paperas), Varicela, Hepatitis A y refuerzo de Neumococo. ¡Con esto celebra su primer año protegido!" }
+  ];
+
   /* ---------- Estado ---------- */
   var state = {
     baby: read(LS.baby, null),
-    records: read(LS.records, []),
-    filter: "todos",
-    formType: null,
-    editingId: null
+    logros: read(LS.logros, []),
+    mesSel: null
   };
 
-  /* ---------- Arranque ---------- */
   function boot() {
-    if (!read(LS.unlocked, false)) {
-      showOnly("screen-lock");
-    } else if (!state.baby) {
-      showOnly("screen-onboarding");
-    } else {
-      showApp();
-    }
+    if (!read(LS.unlocked, false)) showOnly("screen-lock");
+    else if (!state.baby) showOnly("screen-onboarding");
+    else showApp();
   }
-
   function showOnly(id) {
     $("screen-lock").hidden = id !== "screen-lock";
     $("screen-onboarding").hidden = id !== "screen-onboarding";
     $("app").hidden = id !== "app";
   }
+  function showApp() { showOnly("app"); renderAll(); }
 
-  function showApp() {
-    showOnly("app");
-    renderAll();
-  }
-
-  /* ---------- Pantalla de acceso ---------- */
+  /* ---------- Acceso ---------- */
   $("btnComenzar").addEventListener("click", function () {
-    $("lockStep1").hidden = true;
-    $("lockStep2").hidden = false;
-    $("passInput").focus();
+    $("lockStep1").hidden = true; $("lockStep2").hidden = false; $("passInput").focus();
   });
   $("btnVolverLock").addEventListener("click", function () {
-    $("lockStep2").hidden = true;
-    $("lockStep1").hidden = false;
-    $("lockError").hidden = true;
-    $("passInput").value = "";
+    $("lockStep2").hidden = true; $("lockStep1").hidden = false; $("lockError").hidden = true; $("passInput").value = "";
   });
   function tryUnlock() {
-    var v = $("passInput").value.trim();
-    if (v === CLAVE_ACCESO) {
-      write(LS.unlocked, true);
-      $("lockError").hidden = true;
+    if ($("passInput").value.trim() === CLAVE_ACCESO) {
+      write(LS.unlocked, true); $("lockError").hidden = true;
       state.baby ? showApp() : showOnly("screen-onboarding");
-    } else {
-      $("lockError").hidden = false;
-    }
+    } else $("lockError").hidden = false;
   }
   $("btnDesbloquear").addEventListener("click", tryUnlock);
   $("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryUnlock(); });
 
-  /* ---------- Onboarding ---------- */
+  /* ---------- Primera vez ---------- */
   $("btnGuardarBebe").addEventListener("click", function () {
-    var name = $("obName").value.trim();
-    var birth = $("obBirth").value;
-    var valid = name && birth && new Date(birth + "T00:00:00") <= new Date();
-    if (!valid) { $("obError").hidden = false; return; }
+    var name = $("obName").value.trim(), birth = $("obBirth").value;
+    if (!name || !birth || new Date(birth + "T00:00:00") > new Date()) { $("obError").hidden = false; return; }
     state.baby = { name: name, birthdate: birth };
     write(LS.baby, state.baby);
     showApp();
   });
 
-  /* ---------- Navegación ---------- */
-  var VIEWS = ["view-inicio", "view-registro", "view-historial", "view-guia", "view-anio", "view-ajustes"];
-  function goto(viewId) {
-    VIEWS.forEach(function (v) { $(v).hidden = v !== viewId; });
-    document.querySelectorAll(".nav-btn").forEach(function (b) {
-      b.classList.toggle("active", b.dataset.goto === viewId);
-    });
-    window.scrollTo(0, 0);
-    renderAll();
-  }
-  document.addEventListener("click", function (e) {
-    var t = e.target.closest("[data-goto]");
-    if (t) goto(t.dataset.goto);
-  });
+  /* ---------- Render ---------- */
+  function monthIndex(age) { return Math.min(Math.max(age.months, 0), 11); }
 
-  /* ---------- Registros: CRUD ---------- */
-  var TYPE_META = {
-    alimentacion: { label: "Alimentación", emoji: "🍼" },
-    sueno: { label: "Sueño", emoji: "😴" },
-    panal: { label: "Pañal", emoji: "🧷" },
-    nota: { label: "Nota", emoji: "📝" }
-  };
-
-  function saveRecords() { write(LS.records, state.records); }
-
-  function recordDetail(r) {
-    if (r.type === "alimentacion") {
-      var parts = [r.sub];
-      if (r.cantidad) parts.push(r.cantidad);
-      if (r.nota) parts.push(r.nota);
-      return parts.filter(Boolean).join(" · ");
-    }
-    if (r.type === "sueno") {
-      var d = "";
-      if (r.fin) {
-        var mins = Math.max(0, Math.round((new Date(r.fin) - new Date(r.fecha)) / 60000));
-        var h = Math.floor(mins / 60), m = mins % 60;
-        d = "Durmió " + (h ? h + " h " : "") + m + " min";
-      } else d = "Se durmió (sin hora de despertar)";
-      return [d, r.nota].filter(Boolean).join(" · ");
-    }
-    if (r.type === "panal") return [r.sub, r.nota].filter(Boolean).join(" · ");
-    return r.nota || "";
+  function renderHero(age) {
+    $("tbName").textContent = "Mi Bebé Hoy";
+    $("tbAge").textContent = state.baby.name + " · " + age.text;
+    var h = new Date().getHours();
+    var saludo = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+    $("heroGreet").textContent = saludo + ", mamá de " + state.baby.name + "! " + (h < 19 ? "☀️" : "🌙");
+    $("heroSub").textContent = "Hoy " + (state.baby.name) + " tiene exactamente:";
+    $("heroAge").textContent = age.text;
   }
 
-  /* ---------- Formularios de registro ---------- */
-  document.querySelectorAll(".type-btn").forEach(function (b) {
-    b.addEventListener("click", function () {
-      state.formType = b.dataset.type;
-      state.editingId = null;
-      renderForm();
-    });
-  });
-
-  function segRow(name, options, selected) {
-    return '<div class="seg-row" data-seg="' + name + '">' + options.map(function (o) {
-      return '<button type="button" class="seg' + (o === selected ? " selected" : "") + '" data-val="' + esc(o) + '">' + esc(o) + "</button>";
-    }).join("") + "</div>";
-  }
-
-  function renderForm() {
-    var wrap = $("recordFormWrap");
-    document.querySelectorAll(".type-btn").forEach(function (b) {
-      b.classList.toggle("selected", b.dataset.type === state.formType);
-    });
-    if (!state.formType) { wrap.innerHTML = ""; return; }
-
-    var editing = state.editingId ? state.records.find(function (r) { return r.id === state.editingId; }) : null;
-    var t = state.formType;
-    var meta = TYPE_META[t];
-    var now = toLocalInputValue(new Date());
-    var html = '<div class="card"><p class="field-label" style="font-size:1rem">' + meta.emoji + " " +
-      (editing ? "Editar " : "Nuevo registro de ") + meta.label.toLowerCase() + "</p>";
-
-    html += '<label class="field-label" for="fFecha">Fecha y hora</label>' +
-      '<input type="datetime-local" id="fFecha" class="input" value="' + (editing ? toLocalInputValue(new Date(editing.fecha)) : now) + '">';
-
-    if (t === "alimentacion") {
-      html += '<label class="field-label">Tipo</label>' + segRow("sub", ["Pecho", "Biberón", "Sólidos"], editing ? editing.sub : "Pecho");
-      html += '<label class="field-label" for="fCant">Cantidad o tiempo (opcional)</label>' +
-        '<input type="text" id="fCant" class="input" placeholder="Ej. 120 ml · 15 min lado izquierdo" value="' + esc(editing && editing.cantidad || "") + '">';
-    }
-    if (t === "sueno") {
-      html += '<label class="field-label" for="fFin">¿Cuándo despertó? (opcional)</label>' +
-        '<input type="datetime-local" id="fFin" class="input" value="' + (editing && editing.fin ? toLocalInputValue(new Date(editing.fin)) : "") + '">';
-    }
-    if (t === "panal") {
-      html += '<label class="field-label">Tipo</label>' + segRow("sub", ["Pipí", "Popó", "Mixto"], editing ? editing.sub : "Pipí");
-    }
-    html += '<label class="field-label" for="fNota">' + (t === "nota" ? "Tu nota" : "Nota (opcional)") + "</label>" +
-      '<textarea id="fNota" class="input" placeholder="' + (t === "nota" ? "Ej. Hoy sonrió por primera vez 🥹" : "Algo que quieras recordar…") + '">' + esc(editing && editing.nota || "") + "</textarea>";
-
-    html += '<button class="btn btn-primary" id="btnSaveRec">' + (editing ? "Guardar cambios" : "Guardar registro") + "</button>";
-    if (editing) html += '<button class="btn btn-ghost" id="btnCancelEdit">Cancelar</button>';
-    html += '<p class="ok-msg" id="recOk" hidden>Guardado ✓</p></div>';
-    wrap.innerHTML = html;
-
-    wrap.querySelectorAll(".seg").forEach(function (s) {
-      s.addEventListener("click", function () {
-        s.parentElement.querySelectorAll(".seg").forEach(function (x) { x.classList.remove("selected"); });
-        s.classList.add("selected");
-      });
-    });
-
-    $("btnSaveRec").addEventListener("click", function () {
-      var fecha = $("fFecha").value;
-      if (!fecha) { $("fFecha").focus(); return; }
-      var rec = editing || { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), type: t };
-      rec.fecha = new Date(fecha).toISOString();
-      var seg = wrap.querySelector('[data-seg="sub"] .seg.selected');
-      if (seg) rec.sub = seg.dataset.val;
-      if (t === "alimentacion") rec.cantidad = $("fCant").value.trim();
-      if (t === "sueno") {
-        var fin = $("fFin").value;
-        rec.fin = fin ? new Date(fin).toISOString() : null;
-        if (rec.fin && new Date(rec.fin) < new Date(rec.fecha)) rec.fin = null;
-      }
-      rec.nota = $("fNota").value.trim();
-      if (t === "nota" && !rec.nota) { $("fNota").focus(); return; }
-
-      if (!editing) state.records.push(rec);
-      saveRecords();
-      state.editingId = null;
-      renderForm();
-      var okWrap = $("recordFormWrap").querySelector(".ok-msg");
-      if (okWrap) { okWrap.hidden = false; setTimeout(function () { okWrap.hidden = true; }, 1800); }
-      renderAll();
-    });
-    var cancel = $("btnCancelEdit");
-    if (cancel) cancel.addEventListener("click", function () { state.editingId = null; renderForm(); });
-  }
-
-  function editRecord(id) {
-    var r = state.records.find(function (x) { return x.id === id; });
-    if (!r) return;
-    state.formType = r.type;
-    state.editingId = id;
-    goto("view-registro");
-    renderForm();
-  }
-  function deleteRecord(id) {
-    if (!confirm("¿Eliminar este registro?")) return;
-    state.records = state.records.filter(function (r) { return r.id !== id; });
-    saveRecords();
-    renderAll();
-  }
-
-  /* ---------- Render de listas ---------- */
-  function recHTML(r, showDate) {
-    var meta = TYPE_META[r.type];
-    return '<div class="rec">' +
-      '<div class="rec-ico ' + r.type + '">' + meta.emoji + "</div>" +
-      '<div class="rec-body">' +
-      '<div class="rec-title">' + meta.label + (r.sub ? " · " + esc(r.sub) : "") + "</div>" +
-      '<div class="rec-detail">' + esc(recordDetail(r)) + "</div>" +
-      '<div class="rec-actions">' +
-      '<button class="rec-edit" data-edit="' + r.id + '">Editar</button>' +
-      '<button class="rec-del" data-del="' + r.id + '">Eliminar</button>' +
-      "</div></div>" +
-      '<span class="rec-time">' + fmtTime(r.fecha) + "</span></div>";
-  }
-
-  document.addEventListener("click", function (e) {
-    var ed = e.target.closest("[data-edit]");
-    if (ed) { editRecord(ed.dataset.edit); return; }
-    var del = e.target.closest("[data-del]");
-    if (del) deleteRecord(del.dataset.del);
-  });
-
-  function sortedRecords() {
-    return state.records.slice().sort(function (a, b) { return new Date(b.fecha) - new Date(a.fecha); });
-  }
-
-  function renderTodayRecords() {
-    var today = new Date();
-    var list = sortedRecords().filter(function (r) { return sameDay(new Date(r.fecha), today); });
-    $("todayRecords").innerHTML = list.length
-      ? list.slice(0, 6).map(function (r) { return recHTML(r); }).join("")
-      : '<div class="empty">Aún no hay registros hoy. Toca «Registrar» para empezar 💛</div>';
-  }
-
-  function renderHistory() {
-    var list = sortedRecords();
-    if (state.filter !== "todos") list = list.filter(function (r) { return r.type === state.filter; });
-    if (!list.length) {
-      $("historyList").innerHTML = '<div class="empty">No hay registros con este filtro todavía.</div>';
-      return;
-    }
-    var html = "", lastDay = "";
-    list.forEach(function (r) {
-      var day = fmtDay(r.fecha);
-      if (day !== lastDay) { html += '<p class="day-sep">' + day + "</p>"; lastDay = day; }
-      html += recHTML(r);
-    });
-    $("historyList").innerHTML = html;
-  }
-
-  document.querySelectorAll(".filter-chip").forEach(function (c) {
-    c.addEventListener("click", function () {
-      state.filter = c.dataset.filter;
-      document.querySelectorAll(".filter-chip").forEach(function (x) { x.classList.toggle("active", x === c); });
-      renderHistory();
-    });
-  });
-
-  /* ---------- Resúmenes ---------- */
-  function countIn(list) {
-    var c = { alimentacion: 0, sueno: 0, panal: 0, nota: 0 };
-    list.forEach(function (r) { c[r.type]++; });
-    return c;
-  }
-  function summaryHTML(c) {
-    return ["alimentacion", "sueno", "panal", "nota"].map(function (t) {
-      return '<div class="sum-card"><span class="e">' + TYPE_META[t].emoji + '</span><span class="n">' + c[t] + '</span><span class="l">' + TYPE_META[t].label + "</span></div>";
+  function renderYear(age) {
+    var cur = monthIndex(age);
+    var done = Math.min(age.months, 12);
+    $("yearSub").textContent = age.months >= 12
+      ? state.baby.name + " ya completó su primer año. ¡Qué viaje tan hermoso! 🎂"
+      : state.baby.name + " está viviendo su " + ordinal(cur + 1) + " mes.";
+    $("yearFill").style.width = Math.min(100, Math.round((done / 12) * 100)) + "%";
+    if (state.mesSel === null) state.mesSel = cur;
+    $("mesGrid").innerHTML = MESES.map(function (m, i) {
+      var cls = age.months >= 12 ? "past" : (i < cur ? "past" : i === cur ? "current" : "future");
+      var emoji = cls === "past" ? "✓" : cls === "current" ? "🌸" : "·";
+      return '<button class="mes-b ' + cls + (i === state.mesSel ? " selected" : "") + '" data-mes="' + i + '" aria-label="Mes ' + (i + 1) + '"><span class="me">' + emoji + "</span>" + (i + 1) + "</button>";
     }).join("");
+    var sel = MESES[state.mesSel];
+    var isCur = age.months < 12 && state.mesSel === cur;
+    $("mesDetail").innerHTML = '<p class="md-t">' + sel.t + (isCur ? '<span class="md-now">AQUÍ ESTÁ</span>' : "") + "</p><p>" + sel.sem + "</p>";
   }
-  function renderSummaries() {
-    var now = new Date();
-    var today = state.records.filter(function (r) { return sameDay(new Date(r.fecha), now); });
-    $("todaySummary").innerHTML = summaryHTML(countIn(today));
-    var weekAgo = new Date(now - 7 * 24 * 3600 * 1000);
-    var week = state.records.filter(function (r) { return new Date(r.fecha) >= weekAgo; });
-    $("weekSummary").innerHTML = summaryHTML(countIn(week));
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mes]");
+    if (b) { state.mesSel = +b.dataset.mes; renderAll(); }
+  });
+  function ordinal(n) {
+    return ["primer", "segundo", "tercer", "cuarto", "quinto", "sexto", "séptimo", "octavo", "noveno", "décimo", "undécimo", "duodécimo"][n - 1] || n + "º";
   }
 
-  /* ---------- Guía diaria ---------- */
-  function currentMonthIndex() {
-    var age = babyAge(state.baby.birthdate);
-    return Math.min(Math.max(age.months, 0), 11);
-  }
-  function todaysActivity() {
-    var m = currentMonthIndex();
+  function renderDaily(age) {
+    var m = monthIndex(age);
+    $("devTitle").textContent = MESES[m].t;
+    $("devText").textContent = MESES[m].sem;
+    $("expectText").textContent = MESES[m].esp;
+
     var acts = ACTIVIDADES[m];
-    var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-    return { month: m, act: acts[dayOfYear % acts.length] };
-  }
-  function renderGuide() {
-    var age = babyAge(state.baby.birthdate);
-    var ta = todaysActivity();
-    var a = ta.act;
-    $("guiaSub").textContent = state.baby.name + " tiene " + age.text + ". Esta es su actividad de hoy:";
-    $("teaserTitle").textContent = a.titulo;
-    $("activityCard").innerHTML =
-      '<p class="act-month">' + MESES_INFO[ta.month].t + "</p>" +
-      '<p class="act-title">' + esc(a.titulo) + "</p>" +
+    var a = acts[dayOfYear() % acts.length];
+    $("actTitle").textContent = a.titulo;
+    $("actSteps").innerHTML =
       step(1, "Qué vas a hacer", a.que) +
       step(2, "Cómo hacerlo", a.como) +
-      step(3, "Duración", a.dur) +
-      step(4, "Beneficios", a.ben) +
+      step(3, "Duración aproximada", a.dur) +
+      step(4, "Beneficios para el desarrollo", a.ben) +
       step(5, "Qué observar después", a.obs);
+
+    $("mamaText").textContent = CONSEJOS_MAMA[dayOfYear() % CONSEJOS_MAMA.length];
+    $("motivText").textContent = MOTIVACIONALES[(dayOfYear() + 3) % MOTIVACIONALES.length];
   }
   function step(n, label, text) {
-    return '<div class="act-step"><span class="act-step-label"><span class="dot">' + n + "</span>" + label + '</span><p>' + esc(text) + "</p></div>";
+    return '<div class="act-step"><span class="act-step-label"><span class="dot d' + n + '">' + n + "</span>" + label + '</span><p>' + esc(text) + "</p></div>";
   }
 
-  /* ---------- El primer año ---------- */
-  function renderYear() {
-    var age = babyAge(state.baby.birthdate);
-    var cur = age.months; // mes en curso = índice
-    $("anioSub").textContent = state.baby.name + " está en su " + monthOrdinal(Math.min(cur, 11) + 1) + " mes 🌸";
-    $("yearPath").innerHTML = MESES_INFO.map(function (m, i) {
-      var cls = i < cur ? "past" : (i === Math.min(cur, 11) && cur <= 11 ? "current" : "future");
-      if (cur > 11) cls = "past";
-      return '<div class="ym ' + cls + '"><p class="ym-title">' + m.t +
-        (cls === "current" ? '<span class="ym-now">AQUÍ ESTÁ</span>' : "") +
-        '</p><p class="ym-desc">' + m.d + "</p></div>";
-    }).join("");
-  }
-  function monthOrdinal(n) {
-    var o = ["primer", "segundo", "tercer", "cuarto", "quinto", "sexto", "séptimo", "octavo", "noveno", "décimo", "undécimo", "duodécimo"];
-    return o[n - 1] || n + "º";
+  function renderSalud(age) {
+    var next = null;
+    for (var i = 0; i < VACUNAS.length; i++) {
+      if (VACUNAS[i].mes >= age.months) { next = VACUNAS[i]; break; }
+    }
+    if (age.months > 12 || !next) {
+      $("vacTitle").textContent = "¡Esquema del primer año completo! 🎉";
+      $("vacText").textContent = "Tu bebé ya pasó todas las citas de vacunación del primer año. Las siguientes llegan a los 18 meses.";
+      $("vacAlert").hidden = true;
+    } else {
+      $("vacTitle").textContent = next.nombre;
+      $("vacText").textContent = next.detalle;
+      var alertEl = $("vacAlert");
+      if (next.mes === age.months) {
+        alertEl.textContent = "💙 ¡Este mes toca! " + state.baby.name + " ya tiene " + age.months + (age.months === 1 ? " mes" : " meses") + ": agenda su cita de vacunación con calma y cariño.";
+        alertEl.hidden = false;
+      } else {
+        var faltan = next.mes - age.months;
+        alertEl.textContent = "Tranquila, aún " + (faltan === 1 ? "falta 1 mes" : "faltan " + faltan + " meses") + " para esta cita. Te lo iremos recordando aquí. 💙";
+        alertEl.hidden = false;
+      }
+    }
+    $("hitoText").textContent = MESES[monthIndex(age)].hito;
   }
 
-  /* ---------- Cabecera e inicio ---------- */
-  function renderHeader() {
-    var age = babyAge(state.baby.birthdate);
-    $("tbName").textContent = state.baby.name;
-    $("tbAge").textContent = age.text;
-    var h = new Date().getHours();
-    $("heroGreet").textContent = h < 12 ? "Buenos días ☀️" : h < 19 ? "Buenas tardes 🌤" : "Buenas noches 🌙";
-    $("heroAge").textContent = state.baby.name + " tiene " + age.text;
+  /* ---------- Logros / recuerdos ---------- */
+  var EMOJIS = ["🌟", "💛", "🎈", "🌸", "🥹", "🎉", "🤍", "🌷"];
+  function renderLogros() {
+    var list = state.logros.slice().reverse();
+    $("logrosList").innerHTML = list.length
+      ? list.map(function (l) {
+          return '<div class="recuerdo"><span class="re">' + l.emoji + '</span><div class="recuerdo-body"><p class="recuerdo-txt">' + esc(l.texto) + '</p><p class="recuerdo-fecha">' + l.fecha + '</p></div><button class="recuerdo-del" data-dellogro="' + l.id + '">Quitar</button></div>';
+        }).join("")
+      : '<div class="empty">Aquí guardaremos las primeras veces de ' + esc(state.baby.name) + ': su primera sonrisa, su primera palabra… Toca «Celebrar un Logro» cuando pase algo lindo 💛</div>';
   }
+  $("btnLogro").addEventListener("click", function () {
+    var bg = document.createElement("div");
+    bg.className = "modal-bg";
+    bg.innerHTML = '<div class="modal"><h3>🎉 ¡Celebremos!</h3><p class="small-text">¿Qué cosa linda hizo ' + esc(state.baby.name) + ' hoy?</p><textarea id="logroTxt" class="input" placeholder="Ej. ¡Hoy me sonrió por primera vez!" maxlength="200"></textarea><button class="btn btn-primary" id="logroSave">Guardar recuerdo</button><button class="btn btn-ghost" id="logroCancel">Ahora no</button></div>';
+    document.body.appendChild(bg);
+    var txt = bg.querySelector("#logroTxt"); txt.focus();
+    bg.addEventListener("click", function (e) { if (e.target === bg) bg.remove(); });
+    bg.querySelector("#logroCancel").addEventListener("click", function () { bg.remove(); });
+    bg.querySelector("#logroSave").addEventListener("click", function () {
+      var v = txt.value.trim();
+      if (!v) { txt.focus(); return; }
+      state.logros.push({
+        id: Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+        texto: v,
+        emoji: EMOJIS[state.logros.length % EMOJIS.length],
+        fecha: new Date().toLocaleDateString("es", { day: "numeric", month: "long", year: "numeric" })
+      });
+      write(LS.logros, state.logros);
+      bg.remove();
+      renderLogros();
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var d = e.target.closest("[data-dellogro]");
+    if (!d) return;
+    if (!confirm("¿Quitar este recuerdo?")) return;
+    state.logros = state.logros.filter(function (l) { return l.id !== d.dataset.dellogro; });
+    write(LS.logros, state.logros);
+    renderLogros();
+  });
 
   /* ---------- Ajustes ---------- */
+  $("btnGear").addEventListener("click", function () {
+    var aj = $("ajustes");
+    aj.hidden = !aj.hidden;
+    if (!aj.hidden) aj.scrollIntoView({ behavior: "smooth" });
+  });
   $("btnSaveSettings").addEventListener("click", function () {
-    var name = $("setName").value.trim();
-    var birth = $("setBirth").value;
+    var name = $("setName").value.trim(), birth = $("setBirth").value;
     if (!name || !birth || new Date(birth + "T00:00:00") > new Date()) return;
     state.baby = { name: name, birthdate: birth };
     write(LS.baby, state.baby);
+    state.mesSel = null;
     $("setOk").hidden = false;
     setTimeout(function () { $("setOk").hidden = true; }, 1800);
     renderAll();
   });
-  $("btnBorrarTodo").addEventListener("click", function () {
-    if (!confirm("¿Seguro que quieres borrar TODOS los registros? Esta acción no se puede deshacer.")) return;
-    state.records = [];
-    saveRecords();
-    renderAll();
+  $("btnBorrarRecuerdos").addEventListener("click", function () {
+    if (!confirm("¿Seguro que quieres borrar todos los recuerdos guardados? Esta acción no se puede deshacer.")) return;
+    state.logros = [];
+    write(LS.logros, state.logros);
+    renderLogros();
   });
 
   /* ---------- Render global ---------- */
   function renderAll() {
     if (!state.baby) return;
-    renderHeader();
-    renderSummaries();
-    renderTodayRecords();
-    renderHistory();
-    renderGuide();
-    renderYear();
+    var age = babyAge(state.baby.birthdate);
+    renderHero(age);
+    renderYear(age);
+    renderDaily(age);
+    renderSalud(age);
+    renderLogros();
     $("setName").value = state.baby.name;
     $("setBirth").value = state.baby.birthdate;
   }
 
-  /* ---------- Service Worker ---------- */
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
-      navigator.serviceWorker.register("sw.js").catch(function () { /* la app funciona igual sin SW */ });
+      navigator.serviceWorker.register("sw.js").catch(function () {});
     });
   }
 
   boot();
 })();
-
   </script>
 </body>
 </html>
