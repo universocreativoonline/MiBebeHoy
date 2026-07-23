@@ -38,6 +38,12 @@
   --radio: 22px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* Candado visual: cualquier elemento con [hidden] queda SIEMPRE en display:none,
+   sin importar qué otras reglas CSS existan. */
+[hidden] { display: none !important; }
+/* Doble candado: mientras el body tenga la clase .locked, la app completa
+   (contenido, fondo y cualquier menú) es invisible e inaccesible. */
+body.locked #app { display: none !important; }
 html, body { height: 100%; }
 body {
   font-family: 'Nunito', -apple-system, system-ui, sans-serif;
@@ -184,7 +190,7 @@ textarea.input { resize: vertical; min-height: 64px; }
 .ok-msg { color: #5E8A3A; font-weight: 700; margin-top: 8px; font-size: .9rem; }
 .small-text { font-size: .88rem; color: var(--tinta-suave); margin: 6px 0 4px; }
 .disclaimer { font-size: .8rem; color: var(--tinta-suave); text-align: center; padding: 14px 14px 0; line-height: 1.45; }
-#ajustes[hidden] { display: none; }
+
 
 /* Modal celebrar logro */
 .modal-bg {
@@ -201,7 +207,7 @@ textarea.input { resize: vertical; min-height: 64px; }
 .modal .small-text { margin-bottom: 8px; }
   </style>
 </head>
-<body>
+<body class="locked">
 
   <!-- ====== ACCESO ====== -->
   <section id="screen-lock" class="lockscreen" hidden>
@@ -514,6 +520,8 @@ textarea.input { resize: vertical; min-height: 64px; }
     $("screen-lock").hidden = id !== "screen-lock";
     $("screen-onboarding").hidden = id !== "screen-onboarding";
     $("app").hidden = id !== "app";
+    /* El contenido solo "aparece" cuando la app está desbloqueada de verdad */
+    document.body.classList.toggle("locked", id !== "app");
   }
   function showApp() { showOnly("app"); renderAll(); }
 

@@ -1,5 +1,7 @@
-/* Mi Bebé Hoy · Service Worker básico (cache-first con rutas relativas) */
-var CACHE = "mibebehoy-v3";
+/* Mi Bebé Hoy · Service Worker
+   v4: la página (index.html) se pide SIEMPRE primero a la red, y el caché
+   solo se usa si no hay conexión. Así nunca se queda pegada una versión vieja. */
+var CACHE = "mibebehoy-v4";
 var ASSETS = [
   "./",
   "./index.html",
@@ -25,6 +27,28 @@ self.addEventListener("activate", function (e) {
 
 self.addEventListener("fetch", function (e) {
   if (e.request.method !== "GET") return;
+
+  var isPage = e.request.mode === "navigate" ||
+    (e.request.destination === "document") ||
+    e.request.url.indexOf("index.html") !== -1;
+
+  if (isPage) {
+    /* Red primero: siempre la última versión; caché solo sin conexión */
+    e.respondWith(
+      fetch(e.request).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
+        return res;
+      }).catch(function () {
+        return caches.match(e.request).then(function (cached) {
+          return cached || caches.match("./index.html");
+        });
+      })
+    );
+    return;
+  }
+
+  /* Recursos (imagen, manifest): caché primero para carga instantánea */
   e.respondWith(
     caches.match(e.request).then(function (cached) {
       return cached || fetch(e.request).then(function (res) {
