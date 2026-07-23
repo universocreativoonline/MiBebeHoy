@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi Bebé Hoy</title>
+  <meta name="description" content="Tu guía diaria de acompañamiento durante el primer año de tu bebé.">
+  <meta name="theme-color" content="#FFF6EF">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="bebe.png.png">
+  <link rel="apple-touch-icon" href="bebe.png.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mi Bebé Hoy">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* ============================================================
+   Mi Bebé Hoy · Guía de acompañamiento diario
+   Paleta pastel del logo: crema, rosa, celeste, amarillo, verde.
+   ============================================================ */
+:root {
+  --crema: #FFF6EF;
+  --blanco: #FFFFFF;
+  --rosa: #F9D3DE;
+  --rosa-fuerte: #EE8FA4;
+  --celeste: #C6E6F5;
+  --celeste-fuerte: #7FBEDC;
+  --amarillo: #FBE9B8;
+  --amarillo-fuerte: #E9C46A;
+  --verde: #D4EDC4;
+  --verde-fuerte: #8CC63F;
+  --lila: #E5DDF6;
+  --tinta: #5B4A42;
+  --tinta-suave: #8A776D;
+  --sombra: 0 6px 18px rgba(91, 74, 66, 0.10);
+  --radio: 22px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* Candado visual: cualquier elemento con [hidden] queda SIEMPRE en display:none,
+   sin importar qué otras reglas CSS existan. */
+[hidden] { display: none !important; }
+/* Doble candado: mientras el body tenga la clase .locked, la app completa
+   (contenido, fondo y cualquier menú) es invisible e inaccesible. */
+body.locked #app { display: none !important; }
+html, body { height: 100%; }
+body {
+  font-family: 'Nunito', -apple-system, system-ui, sans-serif;
+  background: var(--crema); color: var(--tinta); line-height: 1.55;
+}
+h1, h2, h3, .lock-title { font-family: 'Quicksand', 'Nunito', sans-serif; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; font-size: 1rem; color: var(--tinta); }
+
+/* ---------- Pantallas de acceso y bienvenida ---------- */
+.lockscreen {
+  min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+  padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 15% 20%, rgba(198,230,245,.55), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(251,233,184,.55), transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(249,211,222,.65), transparent 55%),
+    var(--crema);
+}
+.lock-inner { width: 100%; max-width: 360px; text-align: center; }
+.lock-logo-wrap { position: relative; display: inline-block; margin-bottom: 8px; }
+.lock-logo { width: 180px; height: 180px; border-radius: 44px; box-shadow: var(--sombra); animation: float 4s ease-in-out infinite; }
+.lock-logo-sm { width: 110px; height: 110px; border-radius: 28px; margin-bottom: 10px; }
+@keyframes float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
+.sparkle { position: absolute; color: var(--amarillo-fuerte); font-size: 1rem; animation: twinkle 2.6s ease-in-out infinite; opacity: .8; }
+.s1 { top: -6px; right: -14px; } .s2 { bottom: 10px; left: -18px; animation-delay: .8s; color: var(--celeste-fuerte); }
+.s3 { top: 40%; right: -26px; animation-delay: 1.6s; color: var(--rosa-fuerte); }
+@keyframes twinkle { 0%,100% { opacity:.25; transform: scale(.8);} 50% { opacity:1; transform: scale(1.15);} }
+@media (prefers-reduced-motion: reduce) { .lock-logo, .sparkle { animation: none !important; } }
+.lock-title { font-size: 1.9rem; font-weight: 700; margin: 8px 0 4px; }
+.lock-sub { color: var(--tinta-suave); margin-bottom: 24px; }
+.lock-hint { font-size: .85rem; color: var(--tinta-suave); margin: 8px 0 4px; }
+.lock-error { color: #C0564F; font-size: .9rem; margin: 8px 0; font-weight: 600; }
+
+.btn { display: block; width: 100%; padding: 14px 18px; border-radius: 999px; font-size: 1.05rem; font-weight: 700; transition: transform .12s ease; }
+.btn:active { transform: scale(.97); }
+.btn:focus-visible, .mes-b:focus-visible { outline: 3px solid var(--celeste-fuerte); outline-offset: 2px; }
+.btn-primary { background: linear-gradient(135deg, var(--rosa-fuerte), #F5A8BB); color: #fff; box-shadow: 0 8px 20px rgba(238,143,164,.40); }
+.btn-big { padding: 16px; font-size: 1.12rem; }
+.btn-ghost { color: var(--tinta-suave); margin-top: 10px; font-weight: 600; }
+.btn-soft { background: var(--celeste); color: var(--tinta); box-shadow: var(--sombra); }
+.btn-danger-soft { background: #F6DDDA; color: #A34A43; margin-top: 12px; }
+.btn + .btn { margin-top: 10px; }
+.input { width: 100%; padding: 13px 16px; border-radius: 16px; border: 2px solid var(--rosa); background: var(--blanco); margin: 6px 0 14px; outline: none; }
+.input:focus { border-color: var(--rosa-fuerte); }
+.input-center { text-align: center; }
+.field-label { display: block; font-weight: 700; font-size: .92rem; text-align: left; }
+.lock-inner .field-label { text-align: center; margin-top: 6px; }
+textarea.input { resize: vertical; min-height: 64px; }
+
+/* ---------- App ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
+  background: rgba(255,246,239,.92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(91,74,66,.07);
+}
+.topbar-logo { width: 42px; height: 42px; border-radius: 12px; }
+.topbar-text { flex: 1; display: flex; flex-direction: column; }
+.topbar-name { font-weight: 800; font-size: 1.05rem; }
+.topbar-age { font-size: .82rem; color: var(--tinta-suave); }
+.gear { font-size: 1.3rem; padding: 6px 8px; border-radius: 12px; }
+.gear:active { background: var(--rosa); }
+
+#main { max-width: 520px; margin: 0 auto; padding: 18px 18px calc(28px + env(safe-area-inset-bottom)); }
+
+.card { background: var(--blanco); border-radius: var(--radio); padding: 20px; box-shadow: var(--sombra); margin-bottom: 16px; }
+.eyebrow { font-size: .76rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.card h3 { font-size: 1.18rem; font-weight: 700; margin-bottom: 8px; }
+.card p { font-size: .95rem; color: var(--tinta-suave); }
+
+/* Hero saludo */
+.card-hero {
+  background: linear-gradient(135deg, var(--celeste) 0%, var(--rosa) 100%);
+  box-shadow: 0 10px 24px rgba(127,190,220,.25); text-align: center; padding: 26px 20px;
+}
+.hero-greet { font-family: 'Quicksand', sans-serif; font-size: 1.45rem; font-weight: 700; color: var(--tinta); }
+.hero-age { font-size: 1rem; color: var(--tinta); margin-top: 4px; font-weight: 700; }
+.hero-age span { background: rgba(255,255,255,.6); padding: 4px 12px; border-radius: 999px; display: inline-block; margin-top: 6px; }
+
+/* Primer año */
+.year-progress { height: 12px; border-radius: 999px; background: var(--crema); overflow: hidden; margin: 10px 0 16px; }
+.year-progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--verde-fuerte), var(--amarillo-fuerte)); transition: width .5s ease; }
+.mes-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.mes-b {
+  aspect-ratio: 1; border-radius: 16px; background: var(--crema);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .92rem; border: 2px solid transparent; transition: transform .12s ease;
+}
+.mes-b:active { transform: scale(.94); }
+.mes-b .me { font-size: .95rem; line-height: 1; }
+.mes-b.past { background: var(--verde); color: #45702A; }
+.mes-b.current { background: var(--rosa); border-color: var(--rosa-fuerte); box-shadow: 0 6px 14px rgba(238,143,164,.35); }
+.mes-b.future { opacity: .55; }
+.mes-b.selected { border-color: var(--tinta); }
+.mes-detail { margin-top: 14px; background: var(--crema); border-radius: 16px; padding: 14px 16px; }
+.mes-detail .md-t { font-weight: 800; font-size: .98rem; }
+.mes-detail .md-now { font-size: .7rem; font-weight: 800; background: var(--verde); color: #45702A; padding: 3px 10px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+.mes-detail p { font-size: .9rem; margin-top: 3px; }
+
+/* Actividad de hoy */
+.act-step { margin-bottom: 13px; }
+.act-step:last-child { margin-bottom: 0; }
+.act-step-label { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: .86rem; margin-bottom: 3px; color: var(--tinta); }
+.act-step-label .dot { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .72rem; flex-shrink: 0; }
+.d1 { background: var(--amarillo); } .d2 { background: var(--celeste); } .d3 { background: var(--verde); }
+.d4 { background: var(--rosa); } .d5 { background: var(--lila); }
+.act-title { font-family: 'Quicksand', sans-serif; font-size: 1.25rem; font-weight: 700; margin: 2px 0 14px; color: var(--tinta); }
+
+/* Tarjetas emocionales */
+.card-mama { background: var(--lila); box-shadow: 0 8px 20px rgba(160,140,210,.22); }
+.card-mama .eyebrow { color: #7B68B0; }
+.card-mama p, .card-motiv p { color: var(--tinta); }
+.card-motiv {
+  background: linear-gradient(135deg, var(--amarillo) 0%, var(--rosa) 100%);
+  box-shadow: 0 8px 20px rgba(233,196,106,.28); text-align: center; padding: 26px 22px;
+}
+.card-motiv p { font-family: 'Quicksand', sans-serif; font-size: 1.12rem; font-weight: 600; line-height: 1.5; }
+.card-motiv .eyebrow { color: #B07A3A; }
+
+/* Salud y logros */
+.card-vacuna { background: var(--celeste); box-shadow: 0 8px 20px rgba(127,190,220,.25); }
+.card-vacuna .eyebrow { color: #3E7A99; }
+.card-vacuna p, .card-hito p { color: var(--tinta); }
+.vacuna-alert { background: rgba(255,255,255,.65); border-radius: 14px; padding: 10px 14px; margin-top: 10px; font-size: .88rem; font-weight: 700; }
+.card-hito { background: var(--verde); box-shadow: 0 8px 20px rgba(140,198,63,.22); }
+.card-hito .eyebrow { color: #5E8A3A; }
+.vacuna-nota { font-size: .78rem !important; margin-top: 10px; color: var(--tinta-suave) !important; }
+
+/* Logros / recuerdos */
+.btn-logro {
+  background: linear-gradient(135deg, var(--rosa-fuerte), var(--amarillo-fuerte));
+  color: #fff; font-size: 1.1rem; padding: 17px; box-shadow: 0 10px 24px rgba(238,143,164,.45);
+}
+.recuerdo { display: flex; gap: 12px; align-items: flex-start; background: var(--blanco); border-radius: 18px; padding: 13px 15px; box-shadow: var(--sombra); margin-bottom: 10px; }
+.recuerdo .re { font-size: 1.3rem; }
+.recuerdo-body { flex: 1; min-width: 0; }
+.recuerdo-txt { font-weight: 700; font-size: .95rem; overflow-wrap: anywhere; }
+.recuerdo-fecha { font-size: .78rem; color: var(--tinta-suave); }
+.recuerdo-del { font-size: .75rem; font-weight: 700; color: #A34A43; background: #F6DDDA; padding: 4px 10px; border-radius: 999px; }
+.empty { text-align: center; color: var(--tinta-suave); background: var(--blanco); border-radius: 18px; padding: 20px 16px; box-shadow: var(--sombra); font-size: .9rem; }
+
+.section-title { font-size: 1.15rem; font-weight: 700; margin: 24px 0 12px; }
+.ok-msg { color: #5E8A3A; font-weight: 700; margin-top: 8px; font-size: .9rem; }
+.small-text { font-size: .88rem; color: var(--tinta-suave); margin: 6px 0 4px; }
+.disclaimer { font-size: .8rem; color: var(--tinta-suave); text-align: center; padding: 14px 14px 0; line-height: 1.45; }
+
+
+/* Modal celebrar logro */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(91,74,66,.35); z-index: 40;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.modal {
+  background: var(--blanco); border-radius: 26px 26px 0 0; width: 100%; max-width: 520px;
+  padding: 24px 22px calc(24px + env(safe-area-inset-bottom));
+  animation: up .25s ease;
+}
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal h3 { font-size: 1.2rem; margin-bottom: 4px; }
+.modal .small-text { margin-bottom: 8px; }
+  </style>
+</head>
+<body class="locked">
+
+  <!-- ====== ACCESO ====== -->
+  <section id="screen-lock" class="lockscreen" hidden>
+    <div class="lock-inner">
+      <div class="lock-logo-wrap">
+        <img src="bebe.png.png" alt="Bebé sonriendo en una macetita" class="lock-logo">
+        <span class="sparkle s1">✦</span><span class="sparkle s2">✦</span><span class="sparkle s3">✦</span>
+      </div>
+      <h1 class="lock-title">Mi Bebé Hoy</h1>
+      <p class="lock-sub">Tu compañía diaria durante el primer año de tu bebé.</p>
+      <div id="lockStep1">
+        <button class="btn btn-primary btn-big" id="btnComenzar">Comenzar</button>
+      </div>
+      <div id="lockStep2" hidden>
+        <label class="field-label" for="passInput">Escribe tu clave de acceso</label>
+        <input type="password" id="passInput" class="input input-center" placeholder="Clave de acceso" autocomplete="off">
+        <p class="lock-hint">La encuentras en tu PDF de compra.</p>
+        <p class="lock-error" id="lockError" hidden>Esa clave no es correcta. Revísala e inténtalo de nuevo.</p>
+        <button class="btn btn-primary btn-big" id="btnDesbloquear">Entrar</button>
+        <button class="btn btn-ghost" id="btnVolverLock">Volver</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRIMERA VEZ: DATOS DEL BEBÉ ====== -->
+  <section id="screen-onboarding" class="lockscreen" hidden>
+    <div class="lock-inner">
+      <img src="bebe.png.png" alt="" class="lock-logo lock-logo-sm">
+      <h2 class="lock-title">¡Bienvenida! 🌸</h2>
+      <p class="lock-sub">Cuéntanos sobre tu bebé para acompañarlos, a ti y a él, todos los días.</p>
+      <label class="field-label" for="obName">Nombre del bebé</label>
+      <input type="text" id="obName" class="input input-center" placeholder="Ej. Sofía" maxlength="30">
+      <label class="field-label" for="obBirth">Fecha de nacimiento</label>
+      <input type="date" id="obBirth" class="input input-center">
+      <p class="lock-error" id="obError" hidden>Completa el nombre y una fecha válida (no futura).</p>
+      <button class="btn btn-primary btn-big" id="btnGuardarBebe">Comenzar mi aventura 💛</button>
+    </div>
+  </section>
+
+  <!-- ====== APP ====== -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <img src="bebe.png.png" alt="" class="topbar-logo">
+      <div class="topbar-text">
+        <span class="topbar-name" id="tbName">Mi Bebé Hoy</span>
+        <span class="topbar-age" id="tbAge"></span>
+      </div>
+      <button class="gear" id="btnGear" aria-label="Ajustes">⚙️</button>
+    </header>
+
+    <main id="main">
+
+      <!-- Saludo -->
+      <div class="card card-hero">
+        <p class="hero-greet" id="heroGreet"></p>
+        <p class="hero-age" id="heroSub"></p>
+        <p class="hero-age"><span id="heroAge"></span></p>
+      </div>
+
+      <!-- El primer año -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--verde-fuerte)">🌱 El primer año de mi bebé</p>
+        <p id="yearSub" style="margin-bottom:4px"></p>
+        <div class="year-progress"><div class="year-progress-fill" id="yearFill"></div></div>
+        <div class="mes-grid" id="mesGrid"></div>
+        <div class="mes-detail" id="mesDetail"></div>
+      </div>
+
+      <!-- Desarrollo de esta semana -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--celeste-fuerte)">✨ El desarrollo de esta semana</p>
+        <h3 id="devTitle"></h3>
+        <p id="devText"></p>
+      </div>
+
+      <!-- Qué esperar -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--amarillo-fuerte)">🔭 Qué esperar durante esta etapa</p>
+        <p id="expectText"></p>
+      </div>
+
+      <!-- Actividad de hoy -->
+      <div class="card">
+        <p class="eyebrow" style="color:var(--rosa-fuerte)">🎈 Actividad recomendada para hoy</p>
+        <p class="act-title" id="actTitle"></p>
+        <div id="actSteps"></div>
+      </div>
+
+      <!-- Consejo para mamá -->
+      <div class="card card-mama">
+        <p class="eyebrow">💜 Consejo para mamá</p>
+        <p id="mamaText"></p>
+      </div>
+
+      <!-- Mensaje motivacional -->
+      <div class="card card-motiv">
+        <p class="eyebrow">🌷 Mensaje del día para ti</p>
+        <p id="motivText"></p>
+      </div>
+
+      <!-- Salud -->
+      <h2 class="section-title">Salud y logros</h2>
+      <div class="card card-vacuna">
+        <p class="eyebrow">💉 Próxima vacuna</p>
+        <h3 id="vacTitle"></h3>
+        <p id="vacText"></p>
+        <div class="vacuna-alert" id="vacAlert" hidden></div>
+        <p class="vacuna-nota">Según el esquema oficial de vacunación de Colombia (PAI). Confirma fechas y dosis en tu centro de salud o con tu pediatra.</p>
+      </div>
+      <div class="card card-hito">
+        <p class="eyebrow">🌟 Próximo hito del desarrollo</p>
+        <p id="hitoText"></p>
+        <p class="vacuna-nota">Cada bebé tiene su propio ritmo; estos tiempos son solo una guía general.</p>
+      </div>
+
+      <!-- Logros -->
+      <button class="btn btn-logro" id="btnLogro">🎉 Celebrar un Logro</button>
+      <h2 class="section-title">Nuestros recuerdos</h2>
+      <div id="logrosList"></div>
+
+      <!-- Ajustes -->
+      <div id="ajustes" hidden>
+        <h2 class="section-title">Ajustes</h2>
+        <div class="card">
+          <label class="field-label" for="setName">Nombre de tu bebé</label>
+          <input type="text" id="setName" class="input" maxlength="30">
+          <label class="field-label" for="setBirth">Fecha de nacimiento</label>
+          <input type="date" id="setBirth" class="input">
+          <button class="btn btn-primary" id="btnSaveSettings">Guardar cambios</button>
+          <p class="ok-msg" id="setOk" hidden>Cambios guardados ✓</p>
+          <button class="btn btn-danger-soft" id="btnBorrarRecuerdos">Borrar todos los recuerdos</button>
+          <button class="btn btn-danger-soft" id="btnReset">Empezar de cero (borrar datos del bebé)</button>
+          <p class="small-text">Todo se guarda únicamente en este teléfono. Nada sale de tu dispositivo.</p>
+        </div>
+      </div>
+
+      <p class="disclaimer">Mi Bebé Hoy es una herramienta de organización y registro. No brinda diagnósticos ni reemplaza la consulta con profesionales de la salud.</p>
+    </main>
+  </div>
+
+  <script>
+(function () {
+  "use strict";
+
+  var CLAVE_ACCESO = "MiBebeDuerme2026";
+  /* Claves v2: al ser nuevas, cualquier dato de prueba guardado con la
+     versión anterior queda ignorado y la app arranca limpia. */
+  var LS = { unlocked: "mbh_unlocked", baby: "mbh_baby", logros: "mbh_logros" };
+
+  function $(id) { return document.getElementById(id); }
+  function read(k, f) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+  function write(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function dayOfYear() { var n = new Date(); return Math.floor((n - new Date(n.getFullYear(), 0, 0)) / 86400000); }
+
+  /* Edad exacta: meses, semanas y días */
+  function babyAge(birthISO) {
+    var birth = new Date(birthISO + "T00:00:00");
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    if (now < birth) return { months: 0, weeks: 0, days: 0, text: "por nacer" };
+    var months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
+    var anchor = new Date(birth); anchor.setMonth(anchor.getMonth() + months);
+    if (anchor > now) { months--; anchor = new Date(birth); anchor.setMonth(anchor.getMonth() + months); }
+    var totalDays = Math.round((now - anchor) / 86400000);
+    var weeks = Math.floor(totalDays / 7), days = totalDays % 7;
+    var p = [];
+    if (months > 0) p.push(months + (months === 1 ? " mes" : " meses"));
+    if (weeks > 0) p.push(weeks + (weeks === 1 ? " semana" : " semanas"));
+    if (days > 0 || p.length === 0) p.push(days + (days === 1 ? " día" : " días"));
+    var text = p.length > 1 ? p.slice(0, -1).join(", ") + " y " + p[p.length - 1] : p[0];
+    if (months === 0 && weeks === 0 && days === 0) text = "recién nacido 🤍";
+    return { months: months, weeks: weeks, days: days, text: text };
+  }
+
+  /* ---------- Contenido por mes ---------- */
+  var MESES = [
+    { t: "Mes 1 · Conociéndose", sem: "Tu bebé está aterrizando en el mundo, y tú eres su mundo entero. Esta semana sigue afinando el oído: tu voz es el sonido que más lo calma, y tu olor, su lugar seguro.", esp: "Mucho sueño en tandas cortas, alimentación a demanda y llanto como único idioma. Es una etapa intensa: no la estás haciendo mal, así es el primer mes para todas.", hito: "Levantará brevemente la cabecita cuando esté boca abajo y se calmará al escuchar tu voz." },
+    { t: "Mes 2 · Primeras sonrisas", sem: "Esta semana pueden aparecer (o afianzarse) las sonrisas sociales: esas que son para ti, no un reflejo. También empieza a seguir objetos y rostros con la mirada.", esp: "Períodos despierto un poquito más largos, más sonidos de gorjeo y mayor interés por tu cara. El llanto de la tarde puede aumentar; suele ser pasajero.", hito: "Te regalará sonrisas sociales y seguirá objetos con la mirada de lado a lado." },
+    { t: "Mes 3 · Descubre sus manos", sem: "¡Gran descubrimiento en camino: sus propias manos! Esta semana puede pasar ratos mirándolas, juntándolas y llevándoselas a la boca. Su cabecita está cada vez más firme.", esp: "Más control del cuello, vocalizaciones tipo 'aaah' y 'eeeh', y quizás noches con tramos de sueño un poco más largos. Cada bebé lleva su ritmo.", hito: "Sostendrá la cabeza con firmeza y empezará a jugar con sus manitas." },
+    { t: "Mes 4 · Risas y giros", sem: "Semana de risas: las primeras carcajadas suelen llegar por esta etapa y son pura medicina. Su cuerpo practica el giro de boca arriba a boca abajo.", esp: "Puede aparecer la 'regresión del sueño de los 4 meses': despertares más frecuentes mientras su sueño madura. Es temporal, aunque agotador. Pide ayuda y descansa cuando puedas.", hito: "Reirá a carcajadas y podrá girar sobre sí mismo por primera vez." },
+    { t: "Mes 5 · Todo a la boca", sem: "Su boca es ahora su laboratorio: todo lo que toma va directo a ella, y así aprende. Esta semana su puntería para alcanzar objetos mejora notablemente.", esp: "Más babeo (posibles primeros dientitos en camino), giros más frecuentes y mucho interés por lo que comes. Aún no es señal de empezar sólidos: eso se conversa con el pediatra.", hito: "Alcanzará objetos con intención y los pasará de una mano a otra." },
+    { t: "Mes 6 · Sentadito", sem: "¡Medio año de tu bebé! Esta semana puede sostenerse sentado con apoyo y disfrutar su nueva vista del mundo. Para muchos, comienza la aventura de la alimentación complementaria.", esp: "Primeras comidas exploratorias (con guía de su pediatra), más movimiento en el piso y quizás los primeros dientes. El desorden al comer es aprendizaje puro.", hito: "Se sentará con apoyo y probará sus primeros alimentos." },
+    { t: "Mes 7 · Pequeño explorador", sem: "Esta semana el piso es su reino: rueda, gira y repta para llegar a lo que quiere. Sus balbuceos suenan cada vez más a sílabas: 'ba-ba', 'ma-ma'.", esp: "Desplazamientos creativos, sílabas repetidas y opiniones claras sobre lo que le gusta y lo que no. La casa empieza a necesitar ojos por todas partes.", hito: "Se desplazará rodando o arrastrándose y balbuceará sílabas como 'ma-ma'." },
+    { t: "Mes 8 · Gateo en camino", sem: "El gateo se acerca (o ya llegó): esta semana practica ponerse en cuatro puntos y mecerse. También puede llorar cuando sales de la habitación: te ama y aún no sabe que siempre vuelves.", esp: "Angustia de separación (completamente normal y sana), más movilidad y exploración incansable. Asegura muebles y enchufes: viene la etapa exploradora.", hito: "Comenzará a gatear o a desplazarse a su manera por toda la casa." },
+    { t: "Mes 9 · Se pone de pie", sem: "Esta semana quizás lo encuentres agarrado de la cuna o del sofá, ¡de pie! Entiende cada vez más palabras y adora los juegos de esconderse y aparecer.", esp: "Intentos de pararse por todas partes, comprensión de palabras cotidianas ('agua', 'adiós') y una pinza fina cada vez más precisa para tomar trocitos.", hito: "Se pondrá de pie sosteniéndose de los muebles y entenderá palabras cotidianas." },
+    { t: "Mes 10 · Pasos con apoyo", sem: "Semana de 'crucero': camina de lado sosteniéndose de los muebles, viajando de uno a otro. Sus gestos florecen: aplaude, dice adiós con la mano, tira besos.", esp: "Caminatas laterales por toda la sala, gestos sociales encantadores y quizás alguna primera palabra con sentido. Repetir sus sonidos multiplica su lenguaje.", hito: "Caminará sosteniéndose de los muebles y usará gestos como aplaudir y decir adiós." },
+    { t: "Mes 11 · Casi caminando", sem: "Esta semana puede soltarse por segunditos y sostenerse de pie solo. Señala con su dedito todo lo que le interesa: es su forma de preguntarte '¿y esto qué es?'.", esp: "Equilibrio en progreso, señalamientos constantes (¡nómbrale todo!) y comprensión de instrucciones simples como 'dame' o 'ven'.", hito: "Se sostendrá de pie solito por momentos y señalará lo que quiere." },
+    { t: "Mes 12 · ¡Feliz primer año!", sem: "¡Están cerrando un año inmenso! Esta semana puede regalarte primeros pasos sin apoyo o primeras palabras claras. Sea cual sea su ritmo, ha crecido muchísimo… y tú también.", esp: "Primeros pasos (entre los 9 y los 18 meses, todos son normales), primeras palabras y una personalidad que brilla. Prepárate para la aventura de caminar detrás de tu pequeño.", hito: "Dará sus primeros pasos sin apoyo y dirá sus primeras palabras con intención." }
+  ];
+
+  /* Actividades diarias (estructura de 5 puntos), 3 por mes */
+  var ACTIVIDADES = [
+    [ // Mes 1
+      { titulo: "Tiempo piel con piel", que: "Un momento de contacto piel con piel con tu bebé.", como: "Recuéstate cómoda, coloca a tu bebé (solo con pañal) sobre tu pecho y cúbrelo con una mantita. Respira lento y háblale bajito.", dur: "15 a 20 minutos.", ben: "Regula su temperatura y ritmo cardíaco, favorece el vínculo y lo calma profundamente.", obs: "Observa si se relaja, se queda dormido o busca alimentarse. Son señales de que se siente seguro contigo." },
+      { titulo: "Conversación de miradas", que: "Un ratito de miradas y voz suave cara a cara.", como: "Sostén a tu bebé a unos 25–30 cm de tu rostro, sonríe y háblale despacio con frases cortas y cariñosas.", dur: "5 a 10 minutos, cuando esté tranquilo y despierto.", ben: "Estimula su visión, su oído y las primeras bases del lenguaje y del apego.", obs: "Fíjate si sostiene tu mirada unos segundos o se calma al escucharte. Si gira la cara, es su forma de decir 'necesito una pausa'." },
+      { titulo: "Masaje de buenas noches", que: "Un masaje suave antes de dormir.", como: "Con el bebé sobre una superficie cómoda y tibia, acaricia con movimientos lentos sus piernas, bracitos y espalda, usando una gota de aceite para bebés si quieres.", dur: "10 minutos.", ben: "Ayuda a la digestión, relaja su cuerpito y crea una rutina que anuncia la hora de dormir.", obs: "Nota qué zonas parecen gustarle más y si después se duerme con mayor facilidad." }
+    ],
+    [ // Mes 2
+      { titulo: "Cazadora de sonrisas", que: "Provocar y celebrar sus primeras sonrisas sociales.", como: "Ponte frente a tu bebé, sonríele exagerado, hazle sonidos suaves y espera unos segundos su respuesta antes de repetir.", dur: "5 a 10 minutos.", ben: "Fortalece el vínculo y le enseña que la comunicación es de ida y vuelta.", obs: "Cuenta cuántas veces te devuelve la sonrisa y si empieza a sonreír apenas te ve." },
+      { titulo: "Sigue la sonaja", que: "Un juego para que siga objetos con la mirada.", como: "Mueve lentamente una sonaja o juguete de colores de un lado a otro, a unos 30 cm de su carita, dejando que la siga con los ojos.", dur: "5 minutos, un par de veces al día.", ben: "Desarrolla el seguimiento visual y la coordinación de sus ojitos.", obs: "Observa hasta dónde logra seguir el objeto y si intenta girar la cabeza para no perderlo." },
+      { titulo: "Panza abajo con compañía", que: "Tiempo boca abajo (tummy time) contigo al frente.", como: "Coloca a tu bebé boca abajo sobre una manta firme, acuéstate frente a él y llámalo por su nombre con voz alegre.", dur: "3 a 5 minutos, 2 o 3 veces al día, siempre despierto y supervisado.", ben: "Fortalece cuello, hombros y espalda, preparándolo para girar y gatear.", obs: "Fíjate cuánto logra levantar la cabecita y si cada día aguanta un poquito más." }
+    ],
+    [ // Mes 3
+      { titulo: "Descubriendo sus manitas", que: "Ayudarlo a descubrir y mirar sus propias manos.", como: "Acuéstalo boca arriba, junta suavemente sus manitas frente a su cara y deja que las observe. Puedes ponerle un calcetín de color vivo en una mano.", dur: "5 a 10 minutos.", ben: "Impulsa la coordinación ojo-mano y la conciencia de su propio cuerpo.", obs: "Mira si se lleva las manos a la boca o las junta solito durante el día." },
+      { titulo: "Cuentos con voz de mamá", que: "Leerle un cuento corto en voz alta.", como: "Elige un libro de imágenes grandes y contrastes, siéntalo apoyado en ti y señala los dibujos mientras lees con distintas entonaciones.", dur: "10 minutos.", ben: "Alimenta su lenguaje, su atención y el amor por los momentos compartidos.", obs: "Observa si mira las páginas, mueve brazos emocionado o vocaliza como 'respondiendo'." },
+      { titulo: "Alcanza el juguete", que: "Motivar que estire los brazos hacia un objeto.", como: "Durante el tiempo boca abajo o acostado, coloca un juguete llamativo apenas fuera de su alcance y anímalo a tocarlo.", dur: "5 a 8 minutos.", ben: "Desarrolla el alcance intencional y fortalece brazos y tronco.", obs: "Nota si abre la mano al acercarse al juguete y si logra rozarlo o tomarlo." }
+    ],
+    [ // Mes 4
+      { titulo: "Fábrica de carcajadas", que: "Jugar a provocar sus primeras risas.", como: "Haz sonidos chistosos, soplidos suaves en su pancita o el clásico '¿dónde está? ¡aquí está!' con tus manos.", dur: "5 a 10 minutos.", ben: "Las risas liberan tensión, fortalecen el vínculo y estimulan su comunicación.", obs: "Descubre qué juego le da más risa; se convertirá en su favorito por semanas." },
+      { titulo: "Practicando el giro", que: "Acompañarlo a practicar el giro de boca arriba a boca abajo.", como: "Acuéstalo boca arriba, muéstrale un juguete a un costado y ayúdalo guiando suavemente su cadera para completar el giro.", dur: "5 minutos por sesión.", ben: "Fortalece el tronco y le da su primera gran conquista de movimiento.", obs: "Observa hacia qué lado gira más fácil y celebra cada intento aunque no lo complete." },
+      { titulo: "Texturas amigas", que: "Explorar telas y texturas diferentes con sus manos.", como: "Ofrécele una por una telas seguras: algodón suave, toalla, seda. Pasa cada una por sus manitas y bracitos nombrándolas.", dur: "8 a 10 minutos.", ben: "Estimula el tacto y la curiosidad por explorar el mundo.", obs: "Fíjate cuál textura sostiene por más tiempo o cuál le hace abrir los ojos con sorpresa." }
+    ],
+    [ // Mes 5
+      { titulo: "Todo pasa por la boca", que: "Ofrecer juguetes seguros para explorar con la boca.", como: "Dale mordedores limpios y de tamaño seguro, uno a la vez, y deja que los examine libremente bajo tu mirada.", dur: "10 minutos.", ben: "La boca es su gran laboratorio: así conoce formas, texturas y calma sus encías.", obs: "Nota si babea más o muerde con ganas: puede anunciar la llegada de dientitos." },
+      { titulo: "El juego del espejo", que: "Mirarse juntos frente a un espejo.", como: "Siéntate con tu bebé frente a un espejo seguro, saluda a 'ese bebé', haz caras y nombra lo que ven: ojos, nariz, boca.", dur: "5 a 10 minutos.", ben: "Favorece el reconocimiento de sí mismo y las habilidades sociales.", obs: "Observa si sonríe al reflejo, lo toca o busca tu mirada real comparando." },
+      { titulo: "Alcance sentado con apoyo", que: "Practicar el alcance de objetos apoyado entre cojines.", como: "Siéntalo bien rodeado de cojines firmes y coloca juguetes cerca para que los tome, cambiándolos de lugar.", dur: "8 a 10 minutos, siempre a tu lado.", ben: "Prepara los músculos para sentarse solo y afina la puntería de sus manos.", obs: "Fíjate si mantiene el equilibrio unos segundos y si pasa objetos de una mano a otra." }
+    ],
+    [ // Mes 6
+      { titulo: "Sentaditos jugando", que: "Practicar estar sentado con apoyo ligero.", como: "Siéntalo en el piso contigo detrás como respaldo y pon juguetes al frente. Reduce tu apoyo poco a poco según responda.", dur: "10 minutos.", ben: "Fortalece espalda y abdomen y le da una nueva vista del mundo.", obs: "Observa cuánto aguanta erguido y si usa las manos para sostenerse (¡buena señal!)." },
+      { titulo: "Fiesta de sabores", que: "Acompañar la exploración de un alimento nuevo (si ya inició la alimentación complementaria con su pediatra).", como: "Ofrécele el alimento indicado en su plan, en textura adecuada, sin prisa, dejándolo tocar, oler y probar a su ritmo.", dur: "El tiempo de una comida tranquila, unos 15 minutos.", ben: "Construye una relación positiva y curiosa con la comida.", obs: "Nota gestos, preferencias y cuánto realmente llegó a su boquita (¡el desorden es parte del aprendizaje!)." },
+      { titulo: "¿Dónde cayó?", que: "Jugar a dejar caer y buscar objetos.", como: "Deja caer un juguete suave frente a él diciendo '¡oh! ¿dónde está?' y ayúdalo a encontrarlo con la mirada.", dur: "5 a 8 minutos.", ben: "Introduce la noción de que las cosas existen aunque no se vean.", obs: "Observa si sigue el objeto con la mirada hasta el piso o si lo busca él mismo." }
+    ],
+    [ // Mes 7
+      { titulo: "Circuito de cojines", que: "Crear un mini recorrido seguro para que se desplace.", como: "En el piso, arma un caminito con cojines bajos y coloca su juguete favorito al final para motivarlo a llegar rodando o arrastrándose.", dur: "10 a 15 minutos.", ben: "Impulsa la movilidad, la fuerza y la perseverancia.", obs: "Fíjate qué estrategia usa para avanzar: rodar, reptar o girar. Todas valen." },
+      { titulo: "Charla de sílabas", que: "Conversar imitando sus balbuceos.", como: "Cuando diga 'ba-ba' o 'ma-ma', respóndele repitiendo sus sonidos y agregando palabras reales: '¿ma-ma? ¡Sí, aquí está mamá!'.", dur: "A lo largo del día, en ratitos de 3 a 5 minutos.", ben: "Le enseña los turnos de la conversación y expande su repertorio de sonidos.", obs: "Anota qué sílabas repite más; pronto se convertirán en sus primeras palabras." },
+      { titulo: "Tambores caseros", que: "Hacer música golpeando recipientes seguros.", como: "Dale una cuchara de silicona y recipientes plásticos volteados. Muéstrale cómo golpear y deja que experimente ritmos.", dur: "8 a 10 minutos.", ben: "Desarrolla causa-efecto, coordinación y sentido del ritmo.", obs: "Observa si alterna manos, cambia la fuerza del golpe o busca tu reacción al hacer ruido." }
+    ],
+    [ // Mes 8
+      { titulo: "Persigue el juguete rodante", que: "Motivar el gateo con un juguete que ruede.", como: "Haz rodar lentamente una pelota suave frente a él y anímalo con tu voz a ir por ella.", dur: "10 a 15 minutos.", ben: "El gateo fortalece todo su cuerpo y conecta los dos lados del cerebro.", obs: "Nota si se impulsa con brazos, si logra ponerse en cuatro puntos o si ya avanza." },
+      { titulo: "Aquí estoy, mi amor", que: "Practicar separaciones cortitas y reencuentros felices.", como: "Dile 'ya vuelvo', sal de su vista unos segundos y regresa celebrando: '¡aquí está mamá!'. Aumenta el tiempo muy de a poco.", dur: "Ratitos de 1 a 2 minutos, varias veces.", ben: "Le enseña que aunque no te vea, siempre regresas. Suaviza la angustia de separación.", obs: "Observa cómo reacciona al reencuentro y si cada vez tolera mejor la breve espera." },
+      { titulo: "Caja de tesoros", que: "Explorar una caja con objetos cotidianos seguros.", como: "Llena una caja con objetos seguros y variados (cuchara de madera, tela, tapa grande) y deja que los saque y examine uno a uno.", dur: "10 a 15 minutos supervisados.", ben: "Alimenta la curiosidad, la motricidad fina y la concentración.", obs: "Fíjate cuál objeto explora más tiempo y cómo lo gira, golpea o muerde para conocerlo." }
+    ],
+    [ // Mes 9
+      { titulo: "De pie con apoyo", que: "Practicar ponerse de pie sosteniéndose de muebles firmes.", como: "Coloca un juguete sobre el sillón o una mesa baja estable y anímalo a incorporarse para alcanzarlo, cuidándolo de cerca.", dur: "10 minutos.", ben: "Fortalece piernas y equilibrio, el paso previo a caminar.", obs: "Observa si se para solo, cuánto aguanta y cómo resuelve volver a sentarse." },
+      { titulo: "Órdenes con premio", que: "Jugar con palabras que ya entiende: 'dame', 'toma', 'adiós'.", como: "Pídele el juguete con la mano extendida ('¿me lo das?'), agradece con fiesta y devuélveselo ('toma').", dur: "5 a 10 minutos.", ben: "Confirma su comprensión del lenguaje y el placer de cooperar.", obs: "Anota qué palabras entiende claramente aunque todavía no las diga." },
+      { titulo: "Pinza fina con meriendas", que: "Practicar la pinza (pulgar e índice) con trocitos de comida segura.", como: "Sobre su bandeja limpia, coloca trocitos blandos y seguros de su dieta habitual y deja que los tome solito.", dur: "Durante una merienda tranquila.", ben: "La pinza fina es clave para comer solo, dibujar y vestirse en el futuro.", obs: "Mira si ya usa pulgar e índice o todavía barre con toda la manita." }
+    ],
+    [ // Mes 10
+      { titulo: "Crucero por los muebles", que: "Acompañar sus pasos laterales sosteniéndose de los muebles.", como: "Acomoda muebles estables en línea y coloca juguetes a lo largo del recorrido para que 'viaje' de uno a otro.", dur: "10 a 15 minutos.", ben: "Afina equilibrio y coordinación, acercándolo a los primeros pasos.", obs: "Fíjate si cruza tramos cada vez más largos o suelta una mano por momentos." },
+      { titulo: "Aplausos y adiós", que: "Jugar con gestos sociales: aplaudir, tirar besos, decir adiós.", como: "Modela cada gesto con música o al despedirse de alguien, y celebra en grande cada imitación.", dur: "Momentos cortos durante el día.", ben: "Los gestos son sus primeras 'palabras' y encantan a todos a su alrededor.", obs: "Anota qué gestos ya hace solo y en qué situaciones los usa espontáneamente." },
+      { titulo: "Meter y sacar", que: "Jugar a meter y sacar objetos de un recipiente.", como: "Dale un balde o caja y bloques grandes. Muéstrale cómo meterlos uno a uno y volcarlos, y deja que repita a su modo.", dur: "10 minutos.", ben: "Trabaja motricidad fina, concentración y nociones de dentro/fuera.", obs: "Observa si logra soltar el objeto a propósito dentro del recipiente: ¡es más difícil de lo que parece!" }
+    ],
+    [ // Mes 11
+      { titulo: "Pasitos con tus manos", que: "Caminar tomado de tus manos.", como: "Colócate detrás, dale tus dedos como apoyo y camina despacito a su ritmo hacia un juguete o hacia papá.", dur: "10 minutos, con descansos.", ben: "Le da confianza y práctica para animarse a soltar y caminar solo.", obs: "Nota si empieza a soltarse de una mano o si se frena a mantener el equilibrio solito." },
+      { titulo: "Señalar el mundo", que: "Nombrar todo lo que señala con su dedito.", como: "Cuando señale algo, nómbralo con entusiasmo: '¡El perro! Guau guau'. Agrega un dato: 'El perro toma agua'.", dur: "Durante paseos y ratos en casa.", ben: "Señalar es un hito enorme de comunicación; nombrar multiplica su vocabulario.", obs: "Anota qué cosas señala más: son sus intereses y sus futuras primeras palabras." },
+      { titulo: "Torre de dos bloques", que: "Construir torres pequeñas y (claro) derrumbarlas.", como: "Apila dos bloques grandes, celebra la torre y deja que la tire. Luego invítalo a poner él un bloque encima de otro.", dur: "8 a 10 minutos.", ben: "Coordina ojo-mano, enseña precisión y causa-efecto entre risas.", obs: "Observa si intenta apilar aunque no lo logre; el intento es el verdadero avance." }
+    ],
+    [ // Mes 12
+      { titulo: "Primeros pasos libres", que: "Invitar a caminar solito entre tus brazos y los de alguien más.", como: "Siéntense a un metro de distancia, extiendan los brazos y llámenlo por turnos para que cruce caminando.", dur: "10 a 15 minutos con pausas.", ben: "Cada cruce fortalece piernas, equilibrio y una confianza gigante.", obs: "Cuenta sus pasos seguidos y observa cómo mejora día a día. Si aún no camina, también es normal: cada bebé tiene su ritmo." },
+      { titulo: "Álbum del primer año", que: "Mirar juntos fotos de su primer año.", como: "Pasen fotos en el teléfono o álbum nombrando personas y momentos: 'Ahí eras chiquitito', '¡Mira, la abuela!'.", dur: "10 minutos.", ben: "Refuerza memoria, lenguaje y el sentido de pertenencia a su familia.", obs: "Observa si reconoce personas, sonríe ante ciertas fotos o intenta nombrar a alguien." },
+      { titulo: "Pedidos con palabras", que: "Animar sus primeras palabras con elecciones simples.", como: "Muéstrale dos opciones ('¿agua o banana?') y espera unos segundos su respuesta con sonido, gesto o palabra antes de dársela.", dur: "En momentos naturales del día.", ben: "Le muestra que sus palabras y gestos tienen poder para comunicar lo que quiere.", obs: "Anota cada palabra o intento nuevo: estás presenciando el nacimiento de su lenguaje." }
+    ]
+  ];
+
+  /* Consejos para mamá (rotan cada día) */
+  var CONSEJOS_MAMA = [
+    "Dormir cuando el bebé duerme suena a cliché, pero incluso 20 minutos de descanso real cuentan. Los platos pueden esperar; tu energía no.",
+    "No tienes que poder con todo. Aceptar ayuda (con la comida, la limpieza, un turno de brazos) no te hace menos mamá: te hace una mamá cuidada.",
+    "Si hoy solo lograste mantener a tu bebé alimentado, limpio y amado, lograste todo lo importante. Lo demás es decoración.",
+    "Toma agua cada vez que alimentes a tu bebé. Tu cuerpo también está trabajando a tiempo completo y merece el mismo cuidado que le das a él.",
+    "Está bien llorar. La maternidad remueve todo. Si la tristeza se queda muchos días o se siente muy pesada, hablarlo con tu médico es un acto de amor propio.",
+    "Sal a la luz del día aunque sea 10 minutos con tu bebé. El sol y el aire fresco hacen maravillas por el ánimo de los dos.",
+    "Compararte con otras mamás (o con las de las redes) es injusto contigo: tú ves su película editada y tu detrás de cámaras. Lo estás haciendo bien.",
+    "Guarda una foto o video de hoy, aunque sea un martes cualquiera. Los días comunes son los que más vas a atesorar.",
+    "Pide a alguien de confianza que cuide al bebé 30 minutos y haz algo solo para ti: una ducha larga, un café caliente, una llamada con una amiga.",
+    "Tu bebé no necesita una mamá perfecta; te necesita a ti, presente e imperfecta. Eso ya lo tienes ganado.",
+    "Si la lactancia o la alimentación se siente cuesta arriba, buscar apoyo (asesoras, pediatra, otras mamás) no es rendirse: es rodearte de equipo.",
+    "Baja el listón de la casa: un hogar con juguetes regados y ropa sin doblar, pero con una mamá más tranquila, es un mejor hogar.",
+    "Habla contigo misma como le hablarías a tu mejor amiga si estuviera criando: con paciencia, ternura y cero juicios.",
+    "El cansancio de hoy no es para siempre. Cada etapa intensa pasa, y tú vas a mirar atrás asombrada de todo lo que fuiste capaz."
+  ];
+
+  /* Mensajes motivacionales del día */
+  var MOTIVACIONALES = [
+    "Hoy tu bebé no necesita nada extraordinario: te necesita a ti. Y tú ya estás aquí. 💛",
+    "Eres la primera casa, la primera canción y el primer amor de alguien. Qué manera tan hermosa de ser importante.",
+    "Respira. Lo que hoy se siente eterno, mañana será un recuerdo tierno. Vas mucho mejor de lo que crees.",
+    "Cada abrazo que das está construyendo, en silencio, la seguridad con la que tu bebé caminará por el mundo.",
+    "No estás sola: miles de mamás están despiertas contigo esta noche. Y todas, como tú, lo están logrando.",
+    "Tu bebé te mira y ve a su persona favorita del universo. Ese título ya es tuyo, sin condiciones.",
+    "Ser mamá es hacer mil cosas invisibles al día. Que nadie las vea no significa que no sostengan el mundo.",
+    "Hoy date el mismo cariño que le das a tu bebé. Tú también estás creciendo en esta etapa.",
+    "Los brazos cansados de cargar son los mismos que están criando a un ser humano increíble. Qué fuerza la tuya.",
+    "No hay manual perfecto: hay una mamá que ama, observa y aprende. Esa eres tú, y es más que suficiente.",
+    "Un día de estos vas a extrañar este caos hermoso. Mientras tanto, permítete vivirlo sin exigirte perfección.",
+    "Tu voz calma, tus brazos curan y tu presencia enseña. Tienes superpoderes y los usas todos los días.",
+    "Está bien no disfrutar cada minuto. Amar a tu bebé y estar agotada pueden convivir. Ambas cosas son verdad y ambas están bien.",
+    "Mírate: aprendiste a cuidar, calmar y amar a alguien nuevo en tiempo récord. Eres asombrosa, mamá."
+  ];
+
+  /* Esquema de vacunación de Colombia (PAI) - primer año */
+  var VACUNAS = [
+    { mes: 0, nombre: "Recién nacido: BCG y Hepatitis B", detalle: "Al nacer se aplican la BCG (contra la tuberculosis) y la primera dosis de Hepatitis B, normalmente antes de salir de la clínica." },
+    { mes: 2, nombre: "Vacunas de los 2 meses", detalle: "Primeras dosis de Pentavalente (difteria, tosferina, tétanos, hepatitis B e influenza tipo b), Polio, Rotavirus y Neumococo." },
+    { mes: 4, nombre: "Vacunas de los 4 meses", detalle: "Segundas dosis de Pentavalente, Polio, Rotavirus y Neumococo. Refuerzan la protección iniciada a los 2 meses." },
+    { mes: 6, nombre: "Vacunas de los 6 meses", detalle: "Terceras dosis de Pentavalente y Polio, y primera dosis de Influenza (la segunda de influenza se aplica unas 4 semanas después)." },
+    { mes: 12, nombre: "Vacunas de los 12 meses", detalle: "Triple viral (sarampión, rubéola y paperas), Varicela, Hepatitis A y refuerzo de Neumococo. ¡Con esto celebra su primer año protegido!" }
+  ];
+
+  /* ---------- Estado ---------- */
+  var state = {
+    baby: read(LS.baby, null),
+    logros: read(LS.logros, []),
+    mesSel: null
+  };
+
+  function boot() {
+    if (!read(LS.unlocked, false)) showOnly("screen-lock");
+    else if (!state.baby) showOnly("screen-onboarding");
+    else showApp();
+  }
+  function showOnly(id) {
+    $("screen-lock").hidden = id !== "screen-lock";
+    $("screen-onboarding").hidden = id !== "screen-onboarding";
+    $("app").hidden = id !== "app";
+    /* El contenido solo "aparece" cuando la app está desbloqueada de verdad */
+    document.body.classList.toggle("locked", id !== "app");
+  }
+  function showApp() { showOnly("app"); renderAll(); }
+
+  /* ---------- Acceso ---------- */
+  $("btnComenzar").addEventListener("click", function () {
+    $("lockStep1").hidden = true; $("lockStep2").hidden = false; $("passInput").focus();
+  });
+  $("btnVolverLock").addEventListener("click", function () {
+    $("lockStep2").hidden = true; $("lockStep1").hidden = false; $("lockError").hidden = true; $("passInput").value = "";
+  });
+  function tryUnlock() {
+    if ($("passInput").value.trim() === CLAVE_ACCESO) {
+      write(LS.unlocked, true); $("lockError").hidden = true;
+      state.baby ? showApp() : showOnly("screen-onboarding");
+    } else $("lockError").hidden = false;
+  }
+  $("btnDesbloquear").addEventListener("click", tryUnlock);
+  $("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryUnlock(); });
+
+  /* ---------- Primera vez ---------- */
+  $("btnGuardarBebe").addEventListener("click", function () {
+    var name = $("obName").value.trim(), birth = $("obBirth").value;
+    if (!name || !birth || new Date(birth + "T00:00:00") > new Date()) { $("obError").hidden = false; return; }
+    state.baby = { name: name, birthdate: birth };
+    write(LS.baby, state.baby);
+    showApp();
+  });
+
+  /* ---------- Render ---------- */
+  function monthIndex(age) { return Math.min(Math.max(age.months, 0), 11); }
+
+  function renderHero(age) {
+    $("tbName").textContent = "Mi Bebé Hoy";
+    $("tbAge").textContent = state.baby.name + " · " + age.text;
+    var h = new Date().getHours();
+    var saludo = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+    $("heroGreet").textContent = saludo + ", mamá de " + state.baby.name + "! " + (h < 19 ? "☀️" : "🌙");
+    $("heroSub").textContent = "Hoy " + (state.baby.name) + " tiene exactamente:";
+    $("heroAge").textContent = age.text;
+  }
+
+  function renderYear(age) {
+    var cur = monthIndex(age);
+    var done = Math.min(age.months, 12);
+    $("yearSub").textContent = age.months >= 12
+      ? state.baby.name + " ya completó su primer año. ¡Qué viaje tan hermoso! 🎂"
+      : state.baby.name + " está viviendo su " + ordinal(cur + 1) + " mes.";
+    $("yearFill").style.width = Math.min(100, Math.round((done / 12) * 100)) + "%";
+    if (state.mesSel === null) state.mesSel = cur;
+    $("mesGrid").innerHTML = MESES.map(function (m, i) {
+      var cls = age.months >= 12 ? "past" : (i < cur ? "past" : i === cur ? "current" : "future");
+      var emoji = cls === "past" ? "✓" : cls === "current" ? "🌸" : "·";
+      return '<button class="mes-b ' + cls + (i === state.mesSel ? " selected" : "") + '" data-mes="' + i + '" aria-label="Mes ' + (i + 1) + '"><span class="me">' + emoji + "</span>" + (i + 1) + "</button>";
+    }).join("");
+    var sel = MESES[state.mesSel];
+    var isCur = age.months < 12 && state.mesSel === cur;
+    $("mesDetail").innerHTML = '<p class="md-t">' + sel.t + (isCur ? '<span class="md-now">AQUÍ ESTÁ</span>' : "") + "</p><p>" + sel.sem + "</p>";
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mes]");
+    if (b) { state.mesSel = +b.dataset.mes; renderAll(); }
+  });
+  function ordinal(n) {
+    return ["primer", "segundo", "tercer", "cuarto", "quinto", "sexto", "séptimo", "octavo", "noveno", "décimo", "undécimo", "duodécimo"][n - 1] || n + "º";
+  }
+
+  function renderDaily(age) {
+    var m = monthIndex(age);
+    $("devTitle").textContent = MESES[m].t;
+    $("devText").textContent = MESES[m].sem;
+    $("expectText").textContent = MESES[m].esp;
+
+    var acts = ACTIVIDADES[m];
+    var a = acts[dayOfYear() % acts.length];
+    $("actTitle").textContent = a.titulo;
+    $("actSteps").innerHTML =
+      step(1, "Qué vas a hacer", a.que) +
+      step(2, "Cómo hacerlo", a.como) +
+      step(3, "Duración aproximada", a.dur) +
+      step(4, "Beneficios para el desarrollo", a.ben) +
+      step(5, "Qué observar después", a.obs);
+
+    $("mamaText").textContent = CONSEJOS_MAMA[dayOfYear() % CONSEJOS_MAMA.length];
+    $("motivText").textContent = MOTIVACIONALES[(dayOfYear() + 3) % MOTIVACIONALES.length];
+  }
+  function step(n, label, text) {
+    return '<div class="act-step"><span class="act-step-label"><span class="dot d' + n + '">' + n + "</span>" + label + '</span><p>' + esc(text) + "</p></div>";
+  }
+
+  function renderSalud(age) {
+    var next = null;
+    for (var i = 0; i < VACUNAS.length; i++) {
+      if (VACUNAS[i].mes >= age.months) { next = VACUNAS[i]; break; }
+    }
+    if (age.months > 12 || !next) {
+      $("vacTitle").textContent = "¡Esquema del primer año completo! 🎉";
+      $("vacText").textContent = "Tu bebé ya pasó todas las citas de vacunación del primer año. Las siguientes llegan a los 18 meses.";
+      $("vacAlert").hidden = true;
+    } else {
+      $("vacTitle").textContent = next.nombre;
+      $("vacText").textContent = next.detalle;
+      var alertEl = $("vacAlert");
+      if (next.mes === age.months) {
+        alertEl.textContent = "💙 ¡Este mes toca! " + state.baby.name + " ya tiene " + age.months + (age.months === 1 ? " mes" : " meses") + ": agenda su cita de vacunación con calma y cariño.";
+        alertEl.hidden = false;
+      } else {
+        var faltan = next.mes - age.months;
+        alertEl.textContent = "Tranquila, aún " + (faltan === 1 ? "falta 1 mes" : "faltan " + faltan + " meses") + " para esta cita. Te lo iremos recordando aquí. 💙";
+        alertEl.hidden = false;
+      }
+    }
+    $("hitoText").textContent = MESES[monthIndex(age)].hito;
+  }
+
+  /* ---------- Logros / recuerdos ---------- */
+  var EMOJIS = ["🌟", "💛", "🎈", "🌸", "🥹", "🎉", "🤍", "🌷"];
+  function renderLogros() {
+    var list = state.logros.slice().reverse();
+    $("logrosList").innerHTML = list.length
+      ? list.map(function (l) {
+          return '<div class="recuerdo"><span class="re">' + l.emoji + '</span><div class="recuerdo-body"><p class="recuerdo-txt">' + esc(l.texto) + '</p><p class="recuerdo-fecha">' + l.fecha + '</p></div><button class="recuerdo-del" data-dellogro="' + l.id + '">Quitar</button></div>';
+        }).join("")
+      : '<div class="empty">Aquí guardaremos las primeras veces de ' + esc(state.baby.name) + ': su primera sonrisa, su primera palabra… Toca «Celebrar un Logro» cuando pase algo lindo 💛</div>';
+  }
+  $("btnLogro").addEventListener("click", function () {
+    var bg = document.createElement("div");
+    bg.className = "modal-bg";
+    bg.innerHTML = '<div class="modal"><h3>🎉 ¡Celebremos!</h3><p class="small-text">¿Qué cosa linda hizo ' + esc(state.baby.name) + ' hoy?</p><textarea id="logroTxt" class="input" placeholder="Ej. ¡Hoy me sonrió por primera vez!" maxlength="200"></textarea><button class="btn btn-primary" id="logroSave">Guardar recuerdo</button><button class="btn btn-ghost" id="logroCancel">Ahora no</button></div>';
+    document.body.appendChild(bg);
+    var txt = bg.querySelector("#logroTxt"); txt.focus();
+    bg.addEventListener("click", function (e) { if (e.target === bg) bg.remove(); });
+    bg.querySelector("#logroCancel").addEventListener("click", function () { bg.remove(); });
+    bg.querySelector("#logroSave").addEventListener("click", function () {
+      var v = txt.value.trim();
+      if (!v) { txt.focus(); return; }
+      state.logros.push({
+        id: Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+        texto: v,
+        emoji: EMOJIS[state.logros.length % EMOJIS.length],
+        fecha: new Date().toLocaleDateString("es", { day: "numeric", month: "long", year: "numeric" })
+      });
+      write(LS.logros, state.logros);
+      bg.remove();
+      renderLogros();
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var d = e.target.closest("[data-dellogro]");
+    if (!d) return;
+    if (!confirm("¿Quitar este recuerdo?")) return;
+    state.logros = state.logros.filter(function (l) { return l.id !== d.dataset.dellogro; });
+    write(LS.logros, state.logros);
+    renderLogros();
+  });
+
+  /* ---------- Ajustes ---------- */
+  $("btnGear").addEventListener("click", function () {
+    var aj = $("ajustes");
+    aj.hidden = !aj.hidden;
+    if (!aj.hidden) aj.scrollIntoView({ behavior: "smooth" });
+  });
+  $("btnSaveSettings").addEventListener("click", function () {
+    var name = $("setName").value.trim(), birth = $("setBirth").value;
+    if (!name || !birth || new Date(birth + "T00:00:00") > new Date()) return;
+    state.baby = { name: name, birthdate: birth };
+    write(LS.baby, state.baby);
+    state.mesSel = null;
+    $("setOk").hidden = false;
+    setTimeout(function () { $("setOk").hidden = true; }, 1800);
+    renderAll();
+  });
+  $("btnBorrarRecuerdos").addEventListener("click", function () {
+    if (!confirm("¿Seguro que quieres borrar todos los recuerdos guardados? Esta acción no se puede deshacer.")) return;
+    state.logros = [];
+    write(LS.logros, state.logros);
+    renderLogros();
+  });
+  $("btnReset").addEventListener("click", function () {
+    if (!confirm("Esto borrará el nombre, la fecha de nacimiento y los recuerdos guardados, y la app volverá a empezar. ¿Continuar?")) return;
+    localStorage.removeItem(LS.baby);
+    localStorage.removeItem(LS.logros);
+    state.baby = null;
+    state.logros = [];
+    state.mesSel = null;
+    $("obName").value = "";
+    $("obBirth").value = "";
+    $("ajustes").hidden = true;
+    showOnly("screen-onboarding");
+  });
+
+  /* ---------- Render global ---------- */
+  function renderAll() {
+    if (!state.baby) return;
+    var age = babyAge(state.baby.birthdate);
+    renderHero(age);
+    renderYear(age);
+    renderDaily(age);
+    renderSalud(age);
+    renderLogros();
+    $("setName").value = state.baby.name;
+    $("setBirth").value = state.baby.birthdate;
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+
+  boot();
+})();
+  </script>
+</body>
+</html>
